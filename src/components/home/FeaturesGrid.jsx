@@ -21,10 +21,10 @@ export default function FeaturesGrid() {
               className="bg-white p-6 rounded-xl border border-gray-100 hover:shadow-lg transition"
             >
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                <FeatureIcon
+                {/* <FeatureIcon
                   icon={feature.icon}
                   className="w-6 h-6 text-blue-600"
-                />
+                /> */}
               </div>
               <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
               <p className="text-gray-600">{feature.description}</p>

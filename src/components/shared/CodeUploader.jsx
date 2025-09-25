@@ -150,10 +150,10 @@ export default function CodeUploader({ onAnalysis, isDemo = false }) {
         >
           <input {...getInputProps()} />
 
-          <FeatureIcon
+          {/* <FeatureIcon
             icon="upload"
             className="w-12 h-12 mx-auto mb-4 text-gray-400"
-          />
+          /> */}
 
           {isDragActive ? (
             <p className="text-blue-600">Drop the file here...</p>
@@ -180,10 +180,10 @@ export default function CodeUploader({ onAnalysis, isDemo = false }) {
               onClick={() => loadSampleCode(lang)}
               className="p-4 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition"
             >
-              <FeatureIcon
+              {/* <FeatureIcon
                 icon="code"
                 className="w-8 h-8 mx-auto mb-2 text-gray-600"
-              />
+              /> */}
               <p className="capitalize font-medium">{lang}</p>
             </button>
           ))}
@@ -193,7 +193,7 @@ export default function CodeUploader({ onAnalysis, isDemo = false }) {
       {/* File Info */}
       {fileName && (
         <div className="mt-4 mb-4 p-2 bg-gray-100 rounded flex items-center gap-2">
-          <FeatureIcon icon="file" className="w-4 h-4 text-gray-600" />
+          {/* <FeatureIcon icon="file" className="w-4 h-4 text-gray-600" /> */}
           <span className="text-sm text-gray-700">{fileName}</span>
         </div>
       )}

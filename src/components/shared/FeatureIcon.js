@@ -167,5 +167,5 @@ export default function FeatureIcon({ icon, className = "" }) {
     ),
   };
 
-  return icons[icon] || icons.code;
+  return "";
 }

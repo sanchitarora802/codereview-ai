@@ -12,7 +12,7 @@ export default function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center gap-2">
-            <svg
+            {/* <svg
               className="w-8 h-8 text-blue-600"
               fill="none"
               stroke="currentColor"
@@ -24,7 +24,7 @@ export default function Navbar() {
                 strokeWidth={2}
                 d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
               />
-            </svg>
+            </svg> */}
             <span className="text-xl font-bold">
               {APP_CONFIG.name.replace("AI", "")}
               <span className="text-blue-600">AI</span>
@@ -50,7 +50,7 @@ export default function Navbar() {
             className="md:hidden p-2"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            <svg
+            {/* <svg
               className="w-6 h-6"
               fill="none"
               stroke="currentColor"
@@ -71,7 +71,7 @@ export default function Navbar() {
                   d="M4 6h16M4 12h16M4 18h16"
                 />
               )}
-            </svg>
+            </svg> */}
           </button>
         </div>
 
