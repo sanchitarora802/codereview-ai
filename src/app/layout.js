@@ -1,14 +1,8 @@
-import "./globals.css";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
-export const metadata = {
-  title: "CodeReview AI",
-  description: "code review",
-};
+import ClientLayout from "@/components/layout/ClientLayout";
 
 export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
-  );
+  return <ClientLayout>{children}</ClientLayout>;
 }
