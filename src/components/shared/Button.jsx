@@ -1,3 +1,4 @@
+"use client";
 import { BUTTON_VARIANTS, BUTTON_SIZES } from "@/constants";
 
 export default function Button({

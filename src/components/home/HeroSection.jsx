@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import Button from "@/components/shared/Button";
 import { APP_CONFIG } from "@/constants";
