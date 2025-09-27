@@ -5,6 +5,7 @@ import CodeUploader from "@/components/shared/CodeUploader";
 import StatusBadge from "@/components/shared/StatusBadge";
 import Card from "@/components/shared/Card";
 import { ISSUE_TYPES } from "@/constants";
+import FeatureIcon from "../shared/FeatureIcon";
 
 export default function DemoSection() {
   const [demoResult, setDemoResult] = useState(null);
@@ -130,16 +131,10 @@ export default function DemoSection() {
                   <ul className="space-y-2">
                     {demoResult.suggestions.map((suggestion, idx) => (
                       <li key={idx} className="flex items-start gap-2">
-                        {/* <svg
+                        <FeatureIcon
+                          icon={"greenTick"}
                           className="w-5 h-5 text-green-500 mt-0.5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          />
-                        </svg> */}
+                        />
                         <span className="text-sm text-gray-600">
                           {suggestion}
                         </span>

@@ -150,10 +150,10 @@ export default function CodeUploader({ onAnalysis, isDemo = false }) {
         >
           <input {...getInputProps()} />
 
-          {/* <FeatureIcon
+          <FeatureIcon
             icon="upload"
             className="w-12 h-12 mx-auto mb-4 text-gray-400"
-          /> */}
+          />
 
           {isDragActive ? (
             <p className="text-blue-600">Drop the file here...</p>
