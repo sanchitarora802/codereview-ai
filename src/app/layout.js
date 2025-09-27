@@ -1,8 +1,8 @@
-
 import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 import ClientLayout from "@/components/layout/ClientLayout";
+import "./globals.css";
 
 export const metadata = {
   title: "CodeReviewAI - AI-Powered Code Analysis",
