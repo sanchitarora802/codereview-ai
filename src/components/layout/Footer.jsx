@@ -1,7 +1,6 @@
-"use client";
-
 import Link from "next/link";
 import { FOOTER_LINKS, APP_CONFIG } from "@/constants";
+import FeatureIcon from "@/components/shared/FeatureIcon";
 
 export default function Footer() {
   return (
@@ -10,6 +9,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
+              <FeatureIcon icon="code" size={32} className="text-blue-500" />
               <span className="text-xl font-bold text-white">
                 {APP_CONFIG.name}
               </span>

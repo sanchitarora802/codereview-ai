@@ -1,8 +1,9 @@
 "use client";
+
 import Link from "next/link";
 import Button from "@/components/shared/Button";
+import FeatureIcon from "@/components/shared/FeatureIcon";
 import { APP_CONFIG } from "@/constants";
-import FeatureIcon from "../shared/FeatureIcon";
 
 export default function HeroSection() {
   return (
@@ -48,19 +49,19 @@ export default function HeroSection() {
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-6 mt-12 text-sm text-gray-600">
-          <TrustBadge icon="greenTick" text="No credit card required" />
-          <TrustBadge icon="greenTick" text="14-day free trial" />
-          <TrustBadge icon="greenTick" text="Cancel anytime" />
+          <TrustBadge text="No credit card required" />
+          <TrustBadge text="14-day free trial" />
+          <TrustBadge text="Cancel anytime" />
         </div>
       </div>
     </section>
   );
 }
 
-function TrustBadge({ icon, text }) {
+function TrustBadge({ text }) {
   return (
     <div className="flex items-center gap-2">
-      <FeatureIcon icon={icon} className="w-5 h-5 text-green-500 mt-0.5" />
+      <FeatureIcon icon="checkCircle" size={20} className="text-green-500" />
       {text}
     </div>
   );

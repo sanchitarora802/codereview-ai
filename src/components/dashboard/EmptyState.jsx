@@ -1,22 +1,15 @@
 import Button from "@/components/shared/Button";
+import FeatureIcon from "@/components/shared/FeatureIcon";
 
 export default function EmptyState({ onUploadClick }) {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-12">
       <div className="text-center max-w-md mx-auto">
-        <svg
-          className="w-24 h-24 mx-auto text-gray-400 mb-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={1.5}
-            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-          />
-        </svg>
+        <FeatureIcon
+          icon="document"
+          size={96}
+          className="mx-auto text-gray-400 mb-6"
+        />
 
         <h3 className="text-xl font-semibold text-gray-900 mb-2">
           No reviews yet
@@ -32,19 +25,7 @@ export default function EmptyState({ onUploadClick }) {
           onClick={onUploadClick}
           className="mx-auto"
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-            />
-          </svg>
+          <FeatureIcon icon="upload" size={20} />
           Upload Your First Code
         </Button>
 

@@ -11,6 +11,7 @@ import Loading from "@/components/shared/Loading";
 import Button from "@/components/shared/Button";
 import Modal from "@/components/shared/Modal";
 import CodeUploader from "@/components/shared/CodeUploader";
+import FeatureIcon from "@/components/shared/FeatureIcon";
 
 // Mock data for development - replace with API calls
 const MOCK_REVIEWS = [
@@ -21,7 +22,7 @@ const MOCK_REVIEWS = [
     score: 85,
     issues: 3,
     linesOfCode: 245,
-    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
     status: "completed",
     improvements: 5,
   },
@@ -32,7 +33,7 @@ const MOCK_REVIEWS = [
     score: 72,
     issues: 8,
     linesOfCode: 189,
-    createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+    createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
     status: "completed",
     improvements: 12,
   },
@@ -43,7 +44,7 @@ const MOCK_REVIEWS = [
     score: 91,
     issues: 2,
     linesOfCode: 456,
-    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
     status: "completed",
     improvements: 3,
   },
@@ -54,7 +55,7 @@ const MOCK_REVIEWS = [
     score: 68,
     issues: 12,
     linesOfCode: 334,
-    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
     status: "completed",
     improvements: 15,
   },
@@ -65,7 +66,7 @@ const MOCK_REVIEWS = [
     score: 88,
     issues: 4,
     linesOfCode: 567,
-    createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
+    createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
     status: "completed",
     improvements: 6,
   },
@@ -76,7 +77,7 @@ const MOCK_REVIEWS = [
     score: 79,
     issues: 6,
     linesOfCode: 223,
-    createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
+    createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
     status: "completed",
     improvements: 8,
   },
@@ -87,7 +88,7 @@ const MOCK_REVIEWS = [
     score: 94,
     issues: 1,
     linesOfCode: 890,
-    createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000), // 14 days ago
+    createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
     status: "completed",
     improvements: 2,
   },
@@ -98,7 +99,8 @@ export default function DashboardPage() {
   const [reviews, setReviews] = useState([]);
   const [filteredReviews, setFilteredReviews] = useState([]);
   const [showUploadModal, setShowUploadModal] = useState(false);
-  const [viewMode, setViewMode] = useState("list"); // 'list' or 'grid'
+  const [uploadResult, setUploadResult] = useState(null);
+  const [viewMode, setViewMode] = useState("list");
   const [filters, setFilters] = useState({
     search: "",
     language: "all",
@@ -120,21 +122,18 @@ export default function DashboardPage() {
   useEffect(() => {
     let filtered = [...reviews];
 
-    // Search filter
     if (filters.search) {
       filtered = filtered.filter((review) =>
         review.filename.toLowerCase().includes(filters.search.toLowerCase())
       );
     }
 
-    // Language filter
     if (filters.language !== "all") {
       filtered = filtered.filter(
         (review) => review.language === filters.language
       );
     }
 
-    // Date range filter
     if (filters.dateRange !== "all") {
       const now = new Date();
       const ranges = {
@@ -151,7 +150,6 @@ export default function DashboardPage() {
       }
     }
 
-    // Score range filter
     if (filters.scoreRange !== "all") {
       const ranges = {
         excellent: [80, 100],
@@ -166,7 +164,6 @@ export default function DashboardPage() {
       }
     }
 
-    // Sort
     filtered.sort((a, b) => {
       switch (filters.sortBy) {
         case "recent":
@@ -198,24 +195,29 @@ export default function DashboardPage() {
     }
   };
 
-  const handleNewReview = (analysisResult) => {
-    // Process the result from CodeUploader
+  const handleCodeAnalysis = (result) => {
+    setUploadResult(result);
+
     const newReview = {
       _id: Date.now().toString(),
-      filename: "NewFile.js", // In production, get from actual upload
+      filename: "NewCode.js",
       language: "javascript",
-      score: analysisResult.score,
-      issues: analysisResult.issues?.length || 0,
+      score: result.score,
+      issues: result.issues?.length || 0,
       linesOfCode: 150,
-      improvements: analysisResult.suggestions?.length || 0,
+      improvements: result.suggestions?.length || 0,
       createdAt: new Date(),
       status: "completed",
     };
+
     setReviews((prev) => [newReview, ...prev]);
-    setShowUploadModal(false);
+
+    setTimeout(() => {
+      setShowUploadModal(false);
+      setUploadResult(null);
+    }, 1500);
   };
 
-  // Calculate stats
   const stats = {
     totalReviews: reviews.length,
     avgScore: reviews.length
@@ -257,19 +259,7 @@ export default function DashboardPage() {
                 variant="secondary"
                 onClick={() => window.location.reload()}
               >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                  />
-                </svg>
+                <FeatureIcon icon="refresh" size={16} />
                 Refresh
               </Button>
               <Button
@@ -277,19 +267,7 @@ export default function DashboardPage() {
                 size="large"
                 onClick={() => setShowUploadModal(true)}
               >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
+                <FeatureIcon icon="plus" size={20} />
                 New Review
               </Button>
             </div>
@@ -328,19 +306,7 @@ export default function DashboardPage() {
                     : "text-gray-700 hover:bg-gray-50"
                 }`}
               >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 10h16M4 14h16M4 18h16"
-                  />
-                </svg>
+                <FeatureIcon icon="listView" size={16} />
               </button>
               <button
                 onClick={() => setViewMode("grid")}
@@ -350,19 +316,7 @@ export default function DashboardPage() {
                     : "text-gray-700 hover:bg-gray-50"
                 }`}
               >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-                  />
-                </svg>
+                <FeatureIcon icon="gridView" size={16} />
               </button>
             </div>
           </div>
@@ -377,19 +331,11 @@ export default function DashboardPage() {
           )
         ) : reviews.length > 0 ? (
           <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-12 text-center">
-            <svg
-              className="w-16 h-16 mx-auto text-gray-400 mb-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            <FeatureIcon
+              icon="sad"
+              size={64}
+              className="mx-auto text-gray-400 mb-4"
+            />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
               No results found
             </h3>
@@ -417,13 +363,33 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* Use reusable Modal with CodeUploader */}
+      {/* Upload Modal */}
       {showUploadModal && (
         <Modal
           title="New Code Review"
-          onClose={() => setShowUploadModal(false)}
+          size="medium"
+          onClose={() => {
+            setShowUploadModal(false);
+            setUploadResult(null);
+          }}
         >
-          <CodeUploader onAnalysis={handleNewReview} isDemo={false} />
+          {uploadResult && (
+            <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <div className="flex items-center gap-2 text-green-800">
+                <FeatureIcon icon="checkCircle" size={20} />
+                <span className="font-medium">
+                  Analysis complete! Review added to dashboard.
+                </span>
+              </div>
+            </div>
+          )}
+
+          <div className="mb-4">
+            <p className="text-gray-600 mb-4">
+              Upload or paste your code to get instant AI-powered analysis.
+            </p>
+            <CodeUploader onAnalysis={handleCodeAnalysis} isDemo={false} />
+          </div>
         </Modal>
       )}
     </div>
@@ -482,9 +448,10 @@ function ReviewsGrid({ reviews }) {
             </span>
             <a
               href={`/review/${review._id}`}
-              className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+              className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
             >
-              View Details →
+              View Details
+              <FeatureIcon icon="arrowRight" size={16} />
             </a>
           </div>
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import FeatureIcon from "@/components/shared/FeatureIcon";
 
 export default function FilterBar({ filters, onFilterChange, resultCount }) {
   const [showFilters, setShowFilters] = useState(true);
@@ -14,49 +15,12 @@ export default function FilterBar({ filters, onFilterChange, resultCount }) {
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center gap-2 text-gray-700 hover:text-gray-900"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-                />
-              </svg>
+              <FeatureIcon icon="filter" size={20} />
               <span className="font-medium">Filters</span>
-              {showFilters ? (
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              )}
+              <FeatureIcon
+                icon={showFilters ? "chevronDown" : "chevronRight"}
+                size={16}
+              />
             </button>
             <span className="text-sm text-gray-600">
               {resultCount} {resultCount === 1 ? "result" : "results"} found
@@ -72,19 +36,9 @@ export default function FilterBar({ filters, onFilterChange, resultCount }) {
               onChange={(e) => onFilterChange("search", e.target.value)}
               className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
             />
-            <svg
-              className="w-5 h-5 text-gray-400 absolute left-3 top-2.5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
+            <div className="absolute left-3 top-2.5">
+              <FeatureIcon icon="search" size={20} className="text-gray-400" />
+            </div>
           </div>
         </div>
       </div>
