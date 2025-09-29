@@ -28,7 +28,6 @@ const LoginModal = ({ setShowModal }) => {
     // This is where you will integrate your backend (Ruby on Rails) API call.
     // The API will check if this email exists to determine whether to show
     // a password field (Login) or a name field (Signup).
-    console.log(`Checking email: ${email}`);
     await new Promise((resolve) => setTimeout(resolve, 1500));
     // --- End Placeholder ---
 
