@@ -1,0 +1,36 @@
+name: Author Email Validation
+
+# Triggers the workflow on push events to your main branch
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  check-authors:
+    # Use the latest stable Ubuntu runner environment
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        # Ensure you fetch enough history for the action to check all commits in the push
+        with:
+          fetch-depth: 0
+
+      # Step 2: Validate commit authors
+      - name: Enforce Single Authorized Author Email
+        # This action performs the commit inspection and validation
+        uses: zelejs/commit-author-check-action@v1.1.0
+        with:
+          # CRITICAL: Pull the authorized email securely from your repository secrets
+          allowed_authors: ${{ secrets.AUTHORISED_EMAIL }}
+
+          # Ensures that if any commit is found with a different email, the workflow fails,
+          # which subsequently blocks the push due to the Ruleset.
+          on_fail: fail
+
+          # Sets the status check name that your Ruleset must require
+          status_name: commit-author-check
