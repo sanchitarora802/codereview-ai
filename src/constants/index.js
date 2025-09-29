@@ -11,7 +11,7 @@ export const FOOTER_LINKS = {
   product: [
     { href: "/#features", label: "Features" },
     { href: "/pricing", label: "Pricing" },
-    { href: "/api", label: "API" },
+    { href: "/#how-it-works", label: "How-it-works" },
   ],
   company: [
     { href: "/about", label: "About" },

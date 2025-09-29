@@ -1,4 +1,5 @@
-// Import all home components (they are .jsx files)
+"use client";
+
 import HeroSection from "@/components/home/HeroSection";
 import StatsBar from "@/components/home/StatsBar";
 import DemoSection from "@/components/home/DemoSection";

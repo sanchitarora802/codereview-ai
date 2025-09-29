@@ -4,11 +4,15 @@ import { useState } from "react";
 import Link from "next/link";
 import { NAV_LINKS, APP_CONFIG } from "@/constants";
 import FeatureIcon from "@/components/shared/FeatureIcon";
+import useLayoutStore from "@/store/layoutStore";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const router = useRouter();
+  const { changeModal } = useLayoutStore();
 
-  function handleHashClick(e, href) {
+  const handleHashClick = (e, href) => {
     if (!href.startsWith("/#")) return;
     e.preventDefault();
     const targetId = href.split("#")[1];
@@ -20,8 +24,19 @@ export default function Navbar() {
       el.classList.add("animate-fadeIn");
       el.scrollIntoView({ behavior: "smooth", block: "start" });
       setMobileMenuOpen(false);
+    } else {
+      router.push("/");
+      setTimeout(() => {
+        let el = document.getElementById(targetId);
+        console.log("el", el, targetId);
+        el?.classList.remove("animate-fadeIn");
+        void el.offsetWidth;
+        el.classList.add("animate-fadeIn");
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        setMobileMenuOpen(false);
+      }, 800);
     }
-  }
+  };
 
   return (
     <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
@@ -46,12 +61,12 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/dashboard"
+            <button
+              onClick={() => changeModal("login")}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
             >
               Get Started Free
-            </Link>
+            </button>
           </div>
 
           <button

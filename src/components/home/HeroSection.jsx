@@ -1,11 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import Button from "@/components/shared/Button";
 import FeatureIcon from "@/components/shared/FeatureIcon";
 import { APP_CONFIG } from "@/constants";
+import useLayoutStore from "@/store/layoutStore";
 
 export default function HeroSection() {
+  const { changeModal } = useLayoutStore();
+
   return (
     <section className="container mx-auto px-4 pt-20 pb-16">
       <div className="text-center max-w-4xl mx-auto">
@@ -30,11 +32,13 @@ export default function HeroSection() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/dashboard">
-            <Button variant="primary" size="large">
-              Start Free Trial
-            </Button>
-          </Link>
+          <Button
+            onClick={() => changeModal("login")}
+            variant="primary"
+            size="large"
+          >
+            Start Free Trial
+          </Button>
           <Button
             variant="outline"
             size="large"

@@ -6,9 +6,11 @@ import Button from "@/components/shared/Button";
 import Card from "@/components/shared/Card";
 import FeatureIcon from "@/components/shared/FeatureIcon";
 import { PRICING_PLANS, PRICING_FEATURES, FAQ_DATA } from "@/constants";
+import useLayoutStore from "@/store/layoutStore";
 
 export default function PricingPage() {
   const [billingCycle, setBillingCycle] = useState("monthly");
+  const { changeModal } = useLayoutStore();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -189,11 +191,13 @@ export default function PricingPage() {
             and improve their code.
           </p>
           <div className="flex justify-center">
-            <Link href="/dashboard">
-              <Button variant="secondary" size="large">
-                Start Free Trial
-              </Button>
-            </Link>
+            <Button
+              onClick={() => changeModal("login")}
+              variant="secondary"
+              size="large"
+            >
+              Start Free Trial
+            </Button>
           </div>
         </div>
       </section>

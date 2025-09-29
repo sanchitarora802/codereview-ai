@@ -1,8 +1,37 @@
+"use client";
+
 import Link from "next/link";
 import { FOOTER_LINKS, APP_CONFIG } from "@/constants";
 import FeatureIcon from "@/components/shared/FeatureIcon";
+import { useRouter } from "next/navigation";
 
 export default function Footer() {
+  const router = useRouter();
+
+  const handleHashClick = (e, href) => {
+    if (!href.startsWith("/#")) return;
+    e.preventDefault();
+    const targetId = href.split("#")[1];
+    const el = document.getElementById(targetId);
+    if (el) {
+      el.classList.remove("animate-fadeIn");
+      // Force reflow to restart animation
+      void el.offsetWidth;
+      el.classList.add("animate-fadeIn");
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      router.push("/");
+      setTimeout(() => {
+        let el = document.getElementById(targetId);
+        console.log("el", el, targetId);
+        el?.classList.remove("animate-fadeIn");
+        void el.offsetWidth;
+        el.classList.add("animate-fadeIn");
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 800);
+    }
+  };
+
   return (
     <footer className="bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-16">
@@ -87,6 +116,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
+                    onClick={(e) => handleHashClick(e, link.href)}
                     className="text-gray-300 hover:text-blue-400 transition-colors flex items-center gap-2 group"
                   >
                     <FeatureIcon
