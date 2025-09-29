@@ -6,13 +6,6 @@ import Navbar from "@/components/layout/Navbar";
 import LoginModal from "@/components/Modals/LoginModal";
 import useLayoutStore from "@/store/layoutStore";
 
-// Metadata is automatically extracted by Next.js from the default export in this file
-// export const metadata = {
-//   title: "CodeReviewAI - AI-Powered Code Analysis",
-//   description:
-//     "Get instant AI-powered feedback on your code. Find bugs, security issues, and performance problems.",
-// };
-
 export default function RootLayout({ children }) {
   const { showModal, changeModal } = useLayoutStore();
 
