@@ -2,7 +2,7 @@
 export const NAV_LINKS = [
   { href: "/#features", label: "Features" },
   { href: "/#how-it-works", label: "How it Works" },
-  { href: "/#pricing", label: "Pricing" },
+  { href: "/pricing", label: "Pricing" },
   { href: "/dashboard", label: "Dashboard" },
 ];
 
@@ -10,7 +10,7 @@ export const NAV_LINKS = [
 export const FOOTER_LINKS = {
   product: [
     { href: "/#features", label: "Features" },
-    { href: "/#pricing", label: "Pricing" },
+    { href: "/pricing", label: "Pricing" },
     { href: "/api", label: "API" },
   ],
   company: [
@@ -179,6 +179,131 @@ export const API_ENDPOINTS = {
   USER: "/api/user",
 };
 
+// Pricing Plans
+export const PRICING_PLANS = [
+  {
+    id: "starter",
+    name: "Starter",
+    description: "Perfect for individual developers and small projects",
+    monthlyPrice: 0,
+    yearlyPrice: 0,
+    popular: false,
+    cta: "Get Started Free",
+    features: [
+      "basic-analysis",
+      "security-scan",
+      "basic-support",
+      "5-reviews-per-month",
+    ],
+  },
+  {
+    id: "professional",
+    name: "Professional",
+    description: "Ideal for growing teams and serious developers",
+    monthlyPrice: 29,
+    yearlyPrice: 279,
+    popular: true,
+    cta: "Start Free Trial",
+    features: [
+      "advanced-analysis",
+      "security-scan",
+      "code-suggestions",
+      "priority-support",
+      "unlimited-reviews",
+      "team-collaboration",
+      "api-access",
+    ],
+  },
+];
+
+// Pricing Features
+export const PRICING_FEATURES = [
+  {
+    id: "basic-analysis",
+    name: "Basic Code Analysis",
+    icon: "code",
+  },
+  {
+    id: "advanced-analysis",
+    name: "Advanced Code Analysis",
+    icon: "code",
+  },
+  {
+    id: "security-scan",
+    name: "Security Vulnerability Scan",
+    icon: "shield",
+  },
+  {
+    id: "code-suggestions",
+    name: "AI Code Suggestions",
+    icon: "lightning",
+  },
+  {
+    id: "basic-support",
+    name: "Basic Support",
+    icon: "help",
+  },
+  {
+    id: "priority-support",
+    name: "Priority Support",
+    icon: "help",
+  },
+  {
+    id: "5-reviews-per-month",
+    name: "5 Reviews per Month",
+    icon: "checkCircle",
+  },
+  {
+    id: "unlimited-reviews",
+    name: "Unlimited Reviews",
+    icon: "checkCircle",
+  },
+  {
+    id: "team-collaboration",
+    name: "Team Collaboration",
+    icon: "team",
+  },
+  {
+    id: "api-access",
+    name: "API Access",
+    icon: "code",
+  },
+];
+
+// FAQ Data
+export const FAQ_DATA = [
+  {
+    question: "Can I change my plan at any time?",
+    answer:
+      "Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately, and we'll prorate any billing differences.",
+  },
+  {
+    question: "What happens if I exceed my review limit?",
+    answer:
+      "If you exceed your monthly review limit, you'll be notified and can either upgrade your plan or wait until the next billing cycle. We never charge overage fees.",
+  },
+  {
+    question: "Do you offer refunds?",
+    answer:
+      "We offer a 30-day money-back guarantee for all paid plans. If you're not satisfied, contact our support team for a full refund.",
+  },
+  {
+    question: "Can I use CodeReviewAI for open source projects?",
+    answer:
+      "Yes! We offer special pricing for open source projects. Contact our sales team to learn about our open source program.",
+  },
+  {
+    question: "What programming languages do you support?",
+    answer:
+      "We support JavaScript, TypeScript, Python, Java, Go, Ruby, PHP, C++, C#, and many more. Our AI continuously learns new languages and frameworks.",
+  },
+  {
+    question: "Is my code secure?",
+    answer:
+      "Absolutely. We use enterprise-grade security measures, encrypt all data in transit and at rest, and never store your code permanently. Your code is processed and then deleted.",
+  },
+];
+
 // App Config
 export const APP_CONFIG = {
   name: "CodeReviewAI",
@@ -190,5 +315,6 @@ export const APP_CONFIG = {
     twitter: "https://twitter.com/codereviewai",
     github: "https://github.com/codereviewai",
     linkedin: "https://linkedin.com/company/codereviewai",
+    facebook: "https://facebook.com/codereviewai",
   },
 };
