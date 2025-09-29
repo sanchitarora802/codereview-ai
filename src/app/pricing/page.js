@@ -213,21 +213,8 @@ function PricingCard({ plan, billingCycle, isPopular, index }) {
 
   return (
     <Card
-      className={`relative p-8 ${
-        // isPopular
-        //   ? "ring-2 ring-blue-500 shadow-xl scale-105"
-        //   : "hover:shadow-lg transition-shadow duration-200"
-        "hover:shadow-lg transition-shadow duration-200"
-      }`}
+      className={`relative p-8 ${"hover:shadow-lg transition-shadow duration-200"}`}
     >
-      {/* {isPopular && (
-        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-          <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium">
-            Most Popular
-          </span>
-        </div>
-      )} */}
-
       <div className="text-center mb-8">
         <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
         <p className="text-gray-600 mb-6">{plan.description}</p>
