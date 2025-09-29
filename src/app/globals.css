@@ -52,6 +52,10 @@
     animation: float 3s ease-in-out infinite;
   }
 
+  .animate-fadeIn {
+    animation: fadeIn 250ms ease-in-out;
+  }
+
   @keyframes float {
     0%,
     100% {
@@ -59,6 +63,15 @@
     }
     50% {
       transform: translateY(-10px);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
     }
   }
 }

@@ -3,7 +3,7 @@ export const NAV_LINKS = [
   { href: "/#features", label: "Features" },
   { href: "/#how-it-works", label: "How it Works" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/dashboard", label: "Dashboard" },
+  // { href: "/dashboard", label: "Dashboard" },
 ];
 
 // Footer Links
@@ -310,7 +310,7 @@ export const APP_CONFIG = {
   tagline: "AI-Powered Code Analysis",
   description:
     "Get instant AI-powered feedback on your code. Find bugs, security issues, and performance problems.",
-  copyright: "© 2024 CodeReviewAI. All rights reserved.",
+  copyright: "© 2025 CodeReviewAI. All rights reserved.",
   social: {
     twitter: "https://twitter.com/codereviewai",
     github: "https://github.com/codereviewai",

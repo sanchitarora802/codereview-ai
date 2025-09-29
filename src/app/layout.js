@@ -14,8 +14,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ClientLayout>{children}</ClientLayout>
+        <ClientLayout>
+          <PageFade>{children}</PageFade>
+        </ClientLayout>
       </body>
     </html>
   );
+}
+
+function PageFade({ children }) {
+  return <div className="animate-fadeIn">{children}</div>;
 }

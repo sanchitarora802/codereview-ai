@@ -8,7 +8,12 @@ export default function ClientLayout({ children }) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <Navbar />
-      <main>{children}</main>
+      <main
+        className="transition-opacity duration-300 ease-in-out opacity-100"
+        id="route-container"
+      >
+        {children}
+      </main>
       <Footer />
     </div>
   );

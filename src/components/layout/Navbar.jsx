@@ -8,6 +8,21 @@ import FeatureIcon from "@/components/shared/FeatureIcon";
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  function handleHashClick(e, href) {
+    if (!href.startsWith("/#")) return;
+    e.preventDefault();
+    const targetId = href.split("#")[1];
+    const el = document.getElementById(targetId);
+    if (el) {
+      el.classList.remove("animate-fadeIn");
+      // Force reflow to restart animation
+      void el.offsetWidth;
+      el.classList.add("animate-fadeIn");
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      setMobileMenuOpen(false);
+    }
+  }
+
   return (
     <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
       <div className="container mx-auto px-4">
@@ -25,14 +40,18 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
+                onClick={(e) => handleHashClick(e, link.href)}
                 className="text-gray-600 hover:text-gray-900 transition"
               >
                 {link.label}
               </Link>
             ))}
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+            <Link
+              href="/dashboard"
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+            >
               Get Started Free
-            </button>
+            </Link>
           </div>
 
           <button
@@ -49,14 +68,18 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
+                onClick={(e) => handleHashClick(e, link.href)}
                 className="block py-2 text-gray-600 hover:text-gray-900"
               >
                 {link.label}
               </Link>
             ))}
-            <button className="mt-4 w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+            <Link
+              href="/dashboard"
+              className="mt-4 w-full inline-block text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+            >
               Get Started Free
-            </button>
+            </Link>
           </div>
         )}
       </div>
