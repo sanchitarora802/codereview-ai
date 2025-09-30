@@ -14,19 +14,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code (fetch the history to check all pushed commits)
+      # Step 1: Checkout the code (This is the fix)
       - name: Checkout Repository History
         uses: actions/checkout@v4
         with:
-          # Fetch depth 0 ensures we can check all new commits in the push
+          # CRITICAL FIX: Fetch the exact commit SHA being pushed.
+          # This prevents the runner from using old, ghost references.
+          ref: ${{ github.sha }}
           fetch-depth: 0
 
       # Step 2: Custom Script to Check Commit Authorship
-      # This step executes native Git commands to enforce the email policy
       - name: Check Commit Authorship
         env:
           # Import the authorized email securely from repository secrets
-          allowed_authors: ${{ secrets.AUTHORISED_EMAIL }}
+          AUTHORIZED_EMAIL: ${{ secrets.AUTHORISED_EMAIL }}
         run: |
           # 1. Get the list of all new commits included in this push event
           COMMITS=$(git log --format="%H" "${{ github.event.before }}".."${{ github.sha }}")
