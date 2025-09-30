@@ -1,51 +1,46 @@
 name: Author Email Validation
 
-# Triggers the workflow on push events to all branches
 on:
   push:
-    # Use the wildcard to include all branches, including feature branches
     branches:
       - "**"
 
 jobs:
   check-authorship:
-    # Set the status check name for the Ruleset to require
     name: commit-author-check
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code (fetch the history to check all pushed commits)
       - name: Checkout Repository History
         uses: actions/checkout@v4
         with:
-          # Fetch depth 0 ensures we can check all new commits in the push
+          ref: ${{ github.sha }}
           fetch-depth: 0
 
-      # Step 2: Custom Script to Check Commit Authorship
-      # This step executes native Git commands to enforce the email policy
       - name: Check Commit Authorship
         env:
-          # Import the authorized email securely from repository secrets
-          allowed_authors: ${{ secrets.AUTHORISED_EMAIL }}
+          AUTHORIZED_EMAIL: ${{ secrets.AUTHORISED_EMAIL }}
         run: |
-          # 1. Get the list of all new commits included in this push event
-          COMMITS=$(git log --format="%H" "${{ github.event.before }}".."${{ github.sha }}")
+          PREV_SHA="${{ github.event.before }}"
+          CURR_SHA="${{ github.sha }}"
+
+          # Defensive: If previous SHA is blank or all zeroes, default to latest commit only
+          if [ -z "$PREV_SHA" ] || [ "$PREV_SHA" = "0000000000000000000000000000000000000000" ]; then
+            COMMITS=$(git log --format="%H" -n 1)
+          else
+            COMMITS=$(git log --format="%H" "$PREV_SHA".."$CURR_SHA")
+          fi
 
           if [ -z "$COMMITS" ]; then
             echo "No new commits found in this push. Exiting successfully."
             exit 0
           fi
 
-          echo "--- Checking ${#COMMITS[@]} commits in this push ---"
+          echo "--- Checking commits in this push ---"
 
-          # 2. Loop through each new commit
           for SHA in $COMMITS; do
-            # Extract the author email for the specific commit SHA
             AUTHOR_EMAIL=$(git show -s --format='%ae' $SHA)
-            
             echo "Checking commit $SHA by $AUTHOR_EMAIL"
-            
-            # 3. Compare the commit email against the secret
             if [ "$AUTHOR_EMAIL" != "$AUTHORIZED_EMAIL" ]; then
               echo "--------------------------------------------------------"
               echo "❌ PUSH FAILED: Unauthorized author email found in commit $SHA"
@@ -53,7 +48,7 @@ jobs:
               echo "   Expected Email: $AUTHORIZED_EMAIL"
               echo "   Push rejected by policy enforcement."
               echo "--------------------------------------------------------"
-              exit 1 # Exit with error code to fail the workflow
+              exit 1
             fi
           done
 
