@@ -19,7 +19,7 @@ jobs:
 
       - name: Check Commit Authorship
         env:
-          AUTHORIZED_EMAIL: ${{ secrets.AUTHORISED_EMAIL }}
+          AUTHORIZED_EMAIL: ${{secrets.AUTHORISED_EMAIL}}
         run: |
           PREV_SHA="${{ github.event.before }}"
           CURR_SHA="${{ github.sha }}"
