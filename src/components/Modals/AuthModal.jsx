@@ -7,17 +7,18 @@ import FeatureIcon from "../shared/FeatureIcon";
 import InputField from "../shared/InputField";
 import SignupForm from "../Login/SignupForm";
 import LoginForm from "../Login/LoginForm";
+import { checkUserExistence } from "@/utils/cookies";
+import Button from "../shared/Button";
 
 const AuthModal = ({ setShowModal }) => {
   // NOTE: useRouter is replaced by window.location for broad compatibility
-  const [stage, setStage] = useState("password");
+  const [stage, setStage] = useState("email");
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   let currentForm;
 
   const AuthIcon = ({ icon, size = 24, className = "" }) => {
-    // --- Tailwind/Lucide Icons Replacement ---
     const iconMap = {
       next: (
         <svg
@@ -71,6 +72,26 @@ const AuthModal = ({ setShowModal }) => {
     return iconMap[icon] || null;
   };
 
+  const handleEmailSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const result = await checkUserExistence(email);
+      if (result.exists) {
+        setStage("password");
+      } else {
+        setStage("signup");
+      }
+    } catch (err) {
+      setError("Could not connect to service. Please try again.");
+      setStage("email");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (stage === "email") {
     currentForm = (
       <form className="mt-6 space-y-4" onSubmit={handleEmailSubmit}>
@@ -80,10 +101,11 @@ const AuthModal = ({ setShowModal }) => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={isLoading}
-          placeholder="Enter your email address"
+          placeholder={"Enter your email address"}
+          type={"email"}
         />
         <div className="pt-2">
-          <button
+          <Button
             type="submit"
             disabled={isLoading || !email}
             className={`group relative flex w-full justify-center rounded-lg border border-transparent py-3 px-4 text-sm font-medium text-white shadow-md transition duration-150 ease-in-out transform hover:scale-[1.005] ${
@@ -100,7 +122,7 @@ const AuthModal = ({ setShowModal }) => {
                 <AuthIcon type="next" size={20} className="ml-2 -mr-1" />
               </>
             )}
-          </button>
+          </Button>
         </div>
       </form>
     );
