@@ -3,7 +3,7 @@
 import "../../app/globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import LoginModal from "../Modals/loginModal";
+import LoginModal from "../Modals/AuthModal";
 import React, { useState } from "react";
 
 export default function ClientLayout({ children }) {

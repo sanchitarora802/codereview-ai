@@ -31,10 +31,10 @@ export default function PricingPage() {
 
             {/* Billing Toggle */}
             <div className="flex flex-col items-center gap-3 mb-8">
-              <p className="text-sm text-gray-500">
+              {/* <p className="text-sm text-gray-500">
                 Pay annually and save{" "}
                 <span className="text-green-600 font-semibold">20%</span>
-              </p>
+              </p> */}
               <div className="inline-flex rounded-xl bg-gray-100 p-1">
                 <button
                   onClick={() => setBillingCycle("yearly")}

@@ -3,7 +3,7 @@
 import Footer from "@/components/layout/Footer";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
-import LoginModal from "@/components/Modals/LoginModal";
+import AuthModal from "@/components/Modals/AuthModal";
 import useLayoutStore from "@/store/layoutStore";
 
 export default function RootLayout({ children }) {
@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
           >
             {children}
           </main>
-          {showModal === "login" && <LoginModal setShowModal={changeModal} />}
+          {showModal === "login" && <AuthModal setShowModal={changeModal} />}
           <Footer />
         </div>
       </body>
