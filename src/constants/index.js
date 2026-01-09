@@ -170,15 +170,6 @@ export const ISSUE_TYPES = {
   },
 };
 
-// API Endpoints
-export const API_ENDPOINTS = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000",
-  ANALYZE: "/api/analyze",
-  REVIEWS: "/api/reviews",
-  AUTH: "/api/auth",
-  USER: "/api/user",
-};
-
 // Pricing Plans
 export const PRICING_PLANS = [
   {
