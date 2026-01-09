@@ -1,22 +1,28 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "../shared/Modal";
 import Loading from "../shared/Loading";
 import FeatureIcon from "../shared/FeatureIcon";
 import InputField from "../shared/InputField";
 import SignupForm from "../Login/SignupForm";
 import LoginForm from "../Login/LoginForm";
-import { checkUserExistence } from "@/utils/cookies";
 import Button from "../shared/Button";
+import { useAuthStore } from "@/store/authStore";
 
 const AuthModal = ({ setShowModal }) => {
-  // NOTE: useRouter is replaced by window.location for broad compatibility
-  const [stage, setStage] = useState("email");
-  const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   let currentForm;
+
+  const {
+    stage,
+    isLoading,
+    error,
+    currentEmail,
+    setStage,
+    setEmail,
+    setError,
+    checkUser,
+  } = useAuthStore();
 
   const AuthIcon = ({ icon, size = 24, className = "" }) => {
     const iconMap = {
@@ -74,22 +80,7 @@ const AuthModal = ({ setShowModal }) => {
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setIsLoading(true);
-
-    try {
-      const result = await checkUserExistence(email);
-      if (result.exists) {
-        setStage("password");
-      } else {
-        setStage("signup");
-      }
-    } catch (err) {
-      setError("Could not connect to service. Please try again.");
-      setStage("email");
-    } finally {
-      setIsLoading(false);
-    }
+    await checkUser(currentEmail);
   };
 
   if (stage === "email") {
@@ -98,7 +89,7 @@ const AuthModal = ({ setShowModal }) => {
         <InputField
           label="Email address"
           id="email"
-          value={email}
+          value={currentEmail}
           onChange={(e) => setEmail(e.target.value)}
           disabled={isLoading}
           placeholder={"Enter your email address"}
@@ -107,7 +98,7 @@ const AuthModal = ({ setShowModal }) => {
         <div className="pt-2">
           <Button
             type="submit"
-            disabled={isLoading || !email}
+            disabled={isLoading || !currentEmail}
             className={`group relative flex w-full justify-center rounded-lg border border-transparent py-3 px-4 text-sm font-medium text-white shadow-md transition duration-150 ease-in-out transform hover:scale-[1.005] ${
               isLoading
                 ? "bg-indigo-400 cursor-not-allowed"
@@ -127,10 +118,20 @@ const AuthModal = ({ setShowModal }) => {
       </form>
     );
   } else if (stage === "password") {
-    currentForm = <LoginForm email={email} onBack={() => setStage("email")} />;
+    currentForm = (
+      <LoginForm email={currentEmail} onBack={() => setStage("email")} />
+    );
   } else if (stage === "signup") {
-    currentForm = <SignupForm email={email} onBack={() => setStage("email")} />;
+    currentForm = (
+      <SignupForm email={currentEmail} onBack={() => setStage("email")} />
+    );
   }
+
+  useEffect(() => {
+    setTimeout(() => {
+      setError("");
+    }, [2500]);
+  }, [error]);
 
   return (
     <Modal
@@ -153,7 +154,10 @@ const AuthModal = ({ setShowModal }) => {
         )}
 
         <button
-          onClick={() => setShowModal("")}
+          onClick={() => {
+            setStage("email");
+            setShowModal("");
+          }}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition duration-150 rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
           <FeatureIcon icon="close" size={24} />

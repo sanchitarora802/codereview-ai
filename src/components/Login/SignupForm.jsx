@@ -1,20 +1,22 @@
 import React, { useState } from "react";
 import InputField from "../shared/InputField";
 import Loading from "../shared/Loading";
-import FeatureIcon from "../shared/FeatureIcon";
 import Button from "../shared/Button";
+import { useAuthStore } from "@/store/authStore";
 
 const SignupForm = ({ email, onBack }) => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { isLoading, error, signUp, setError } = useAuthStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    // setIsLoading(true);
+    if (password === confirmPassword) {
+      await signUp(name, password);
+    } else {
+      setError("password and confirm password should match!");
+    }
   };
 
   return (
@@ -31,11 +33,11 @@ const SignupForm = ({ email, onBack }) => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {error && (
+        {/* {error && (
           <div className="rounded-lg bg-red-50 p-3 text-sm font-medium text-red-700 border border-red-200">
             {error}
           </div>
-        )}
+        )} */}
 
         <InputField
           id="name"
@@ -72,12 +74,7 @@ const SignupForm = ({ email, onBack }) => {
         <Button
           type="submit"
           size="large"
-          disabled={
-            isLoading ||
-            !name ||
-            password.length < 8 ||
-            password !== confirmPassword
-          }
+          disabled={isLoading || !name}
           className="w-full shadow-lg transition transform hover:scale-[1.005]"
         >
           {isLoading ? <Loading size="small" text="" /> : "Sign Up"}
