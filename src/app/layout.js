@@ -5,9 +5,26 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import AuthModal from "@/components/Modals/AuthModal";
 import useLayoutStore from "@/store/layoutStore";
+import { useEffect } from "react";
+import { getCookie } from "@/utils/cookies";
+import { useAuthStore } from "@/store/authStore";
 
 export default function RootLayout({ children }) {
   const { showModal, changeModal } = useLayoutStore();
+  const { user, getUserProfile } = useAuthStore();
+
+  const componentToRender = () => {
+    return children;
+  };
+
+  const fetchProfile = async () => {
+    const token = getCookie(process.env.NEXT_PUBLIC_Token);
+    getUserProfile(token);
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
 
   return (
     <html lang="en">
@@ -25,7 +42,7 @@ export default function RootLayout({ children }) {
             className="transition-opacity duration-300 ease-in-out opacity-100 animate-fadeIn"
             id="route-container"
           >
-            {children}
+            {componentToRender()}
           </main>
           {showModal === "login" && <AuthModal setShowModal={changeModal} />}
           <Footer />

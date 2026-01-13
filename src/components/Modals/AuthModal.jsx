@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Modal from "../shared/Modal";
 import Loading from "../shared/Loading";
 import FeatureIcon from "../shared/FeatureIcon";
@@ -23,60 +23,6 @@ const AuthModal = ({ setShowModal }) => {
     setError,
     checkUser,
   } = useAuthStore();
-
-  const AuthIcon = ({ icon, size = 24, className = "" }) => {
-    const iconMap = {
-      next: (
-        <svg
-          className={className}
-          xmlns="http://www.w3.org/2000/svg"
-          width={size}
-          height={size}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M5 12h14M12 5l7 7-7 7" />
-        </svg>
-      ),
-      back: (
-        <svg
-          className={className}
-          xmlns="http://www.w3.org/2000/svg"
-          width={size}
-          height={size}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M19 12H5M12 19l-7-7 7-7" />
-        </svg>
-      ),
-      close: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width={size}
-          height={size}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      ),
-    };
-    return iconMap[icon] || null;
-  };
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
@@ -110,7 +56,7 @@ const AuthModal = ({ setShowModal }) => {
             ) : (
               <>
                 Continue
-                <AuthIcon type="next" size={20} className="ml-2 -mr-1" />
+                <FeatureIcon icon="chevronRight" size={24} />
               </>
             )}
           </Button>
@@ -130,7 +76,7 @@ const AuthModal = ({ setShowModal }) => {
   useEffect(() => {
     setTimeout(() => {
       setError("");
-    }, [2500]);
+    }, [3000]);
   }, [error]);
 
   return (
@@ -153,10 +99,22 @@ const AuthModal = ({ setShowModal }) => {
           </>
         )}
 
+        {stage !== "email" && (
+          <button
+            onClick={() => {
+              setStage("email");
+            }}
+            className="absolute top-4 left-4 text-gray-600 hover:text-gray-400 transition duration-150 rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <FeatureIcon icon="chevronLeft" size={24} />
+          </button>
+        )}
+
         <button
           onClick={() => {
             setStage("email");
             setShowModal("");
+            setEmail("");
           }}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition duration-150 rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
