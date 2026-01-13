@@ -19,6 +19,8 @@ export const getCookie = (name) => {
   return null;
 };
 
-export const eraseCookie = (name) => {
-  document.cookie = name + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+export const eraseCookie = (name, path = "/") => {
+  // We set the value to empty and the expiration to a date in the past.
+  // Including 'SameSite=Lax' ensures compatibility with modern browser security policies.
+  document.cookie = `${name}=; Path=${path}; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax`;
 };

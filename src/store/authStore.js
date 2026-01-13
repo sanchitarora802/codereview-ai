@@ -1,7 +1,8 @@
-import axiosInstance from "@/utils/Axios Config";
+import axiosInstance, { registerRequestIntercept } from "@/utils/Axios Config";
 import { eraseCookie, setCookie } from "@/utils/cookies";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import useLayoutStore from "./layoutStore";
 
 export const useAuthStore = create(
   devtools((set, get) => ({
@@ -22,7 +23,7 @@ export const useAuthStore = create(
     checkUser: async (email) => {
       set({ isLoading: true, error: null });
       try {
-        const res = axiosInstance.post("/auth/checkEmail", {
+        const res = await axiosInstance.post("/auth/checkEmail", {
           email,
         });
         set({
@@ -57,13 +58,48 @@ export const useAuthStore = create(
         set({
           isLoading: false,
           user: data.user,
-          stage: "success",
+          stage: "email",
         });
+        if (data?.user) useLayoutStore.getState()?.changeModal("");
       } catch (err) {
         set({
           isLoading: false,
           error: err?.response?.data?.message || "Signup failed",
         });
+      }
+    },
+
+    getUserProfile: async (token) => {
+      const { logout } = get();
+      set({
+        isLoading: true,
+        error: null,
+      });
+
+      if (!token) {
+        set({
+          isLoading: false,
+          error: "No token found!!",
+        });
+        logout();
+        return;
+      }
+      registerRequestIntercept(token);
+      try {
+        const res = await axiosInstance.get("/auth/userProfile");
+        set({ user: res.data.data.user });
+        set({
+          isLoading: false,
+          error: null,
+        });
+      } catch (err) {
+        if (err.response?.status === 401) {
+          set({
+            isLoading: false,
+            error: "401: Session invalid or expired. Logging out.",
+          });
+          logout();
+        }
       }
     },
 

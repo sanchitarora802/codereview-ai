@@ -2,11 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import {
-  SUPPORTED_FILE_TYPES,
-  API_ENDPOINTS,
-  DEMO_CODE_SAMPLES,
-} from "@/constants";
+import { SUPPORTED_FILE_TYPES, DEMO_CODE_SAMPLES } from "@/constants";
 import FeatureIcon from "./FeatureIcon";
 import Button from "./Button";
 import Loading from "./Loading";
