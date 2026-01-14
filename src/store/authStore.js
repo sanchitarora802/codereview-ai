@@ -103,6 +103,34 @@ export const useAuthStore = create(
       }
     },
 
+    login: async (email, password) => {
+      set({
+        isLoading: true,
+        error: null,
+      });
+      try {
+        const params = {
+          email: email,
+          password: password,
+        };
+        const res = await axiosInstance.post("/auth/login", params);
+        const { token, data } = res.data;
+        set({
+          isLoading: false,
+          user: data.user,
+          stage: "email",
+        });
+        console.log("res", res);
+        setCookie(process.env.NEXT_PUBLIC_Token, token);
+        if (data?.user) useLayoutStore.getState()?.changeModal("");
+      } catch (err) {
+        set({
+          isLoading: false,
+          error: err?.response?.data?.message || "Signup failed",
+        });
+      }
+    },
+
     logout: () => {
       eraseCookie(process.env.NEXT_PUBLIC_Token);
       set({ user: null, stage: "email", currentEmail: "", error: null });

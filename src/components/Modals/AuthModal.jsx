@@ -121,7 +121,7 @@ const AuthModal = ({ setShowModal }) => {
           <FeatureIcon icon="close" size={24} />
         </button>
 
-        {error && (
+        {stage === "email" && error && (
           <div className="rounded-lg bg-red-50 p-3 text-sm font-medium text-red-700 border border-red-200">
             {error}
           </div>

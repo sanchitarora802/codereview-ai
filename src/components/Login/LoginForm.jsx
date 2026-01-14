@@ -2,17 +2,15 @@ import React, { useState } from "react";
 import InputField from "../shared/InputField";
 import Loading from "../shared/Loading";
 import Button from "../shared/Button";
-import FeatureIcon from "../shared/FeatureIcon";
+import { useAuthStore } from "@/store/authStore";
 
 const LoginForm = ({ email, onBack }) => {
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { isLoading, error, setError, login } = useAuthStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    // setIsLoading(true);
+    login(email, password);
   };
 
   return (
@@ -26,15 +24,6 @@ const LoginForm = ({ email, onBack }) => {
           Logging in as:{" "}
           <span className="font-medium text-gray-700">{email}</span>
         </p>
-        {/* <Button
-          variant="tertiary"
-          size="small"
-          onClick={onBack}
-          className="!py-0 !px-0" // Override padding for link-like appearance
-        >
-          <FeatureIcon icon="back" size={12} className="mr-1" />
-          Change Email
-        </Button> */}
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -58,7 +47,7 @@ const LoginForm = ({ email, onBack }) => {
         <Button
           type="submit"
           size="large"
-          disabled={isLoading || password.length < 6}
+          disabled={isLoading}
           className="w-full shadow-lg transition transform hover:scale-[1.005]"
         >
           {isLoading ? <Loading size="small" text="" /> : "Log In"}

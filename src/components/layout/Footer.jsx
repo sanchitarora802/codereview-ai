@@ -156,7 +156,7 @@ export default function Footer() {
         <div className="border-t border-gray-700 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-sm">{APP_CONFIG.copyright}</p>
-            <div className="flex gap-6 text-sm">
+            {/* <div className="flex gap-6 text-sm">
               <Link
                 href="/privacy"
                 className="text-gray-400 hover:text-white transition-colors"
@@ -169,7 +169,7 @@ export default function Footer() {
               >
                 Terms of Service
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
