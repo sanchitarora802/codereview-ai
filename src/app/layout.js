@@ -11,7 +11,7 @@ import { useAuthStore } from "@/store/authStore";
 
 export default function RootLayout({ children }) {
   const { showModal, changeModal } = useLayoutStore();
-  const { user, getUserProfile } = useAuthStore();
+  const { getUserProfile } = useAuthStore();
 
   const componentToRender = () => {
     return children;

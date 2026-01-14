@@ -591,24 +591,37 @@ export default function FeatureIcon({ icon, className = "", size = 24 }) {
         />
       </svg>
     ),
+
+    //userProfile
+    userprofile: (
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 24.00 24.00"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+        <g
+          id="SVGRepo_tracerCarrier"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke="#CCCCCC"
+          stroke-width="0.144"
+        ></g>
+        <g id="SVGRepo_iconCarrier">
+          <path
+            d="M12 1C8.96243 1 6.5 3.46243 6.5 6.5C6.5 9.53757 8.96243 12 12 12C15.0376 12 17.5 9.53757 17.5 6.5C17.5 3.46243 15.0376 1 12 1Z"
+            fill="#2563eb"
+          ></path>
+          <path
+            d="M7 14C4.23858 14 2 16.2386 2 19V22C2 22.5523 2.44772 23 3 23H21C21.5523 23 22 22.5523 22 22V19C22 16.2386 19.7614 14 17 14H7Z"
+            fill="#2563eb"
+          ></path>
+        </g>
+      </svg>
+    ),
   };
 
   return icons[icon] || icons.code;
-}
-
-{
-  /* <svg
-xmlns="http://www.w3.org/2000/svg"
-width="18"
-height="18"
-viewBox="0 0 24 24"
-fill="none"
-stroke="currentColor"
-strokeWidth="2"
-strokeLinecap="round"
-strokeLinejoin="round"
->
-<line x1="5" y1="12" x2="19" y2="12"></line>
-<polyline points="12 5 19 12 12 19"></polyline>
-</svg> */
 }

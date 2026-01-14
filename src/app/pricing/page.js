@@ -7,6 +7,7 @@ import Card from "@/components/shared/Card";
 import FeatureIcon from "@/components/shared/FeatureIcon";
 import { PRICING_PLANS, PRICING_FEATURES, FAQ_DATA } from "@/constants";
 import useLayoutStore from "@/store/layoutStore";
+import { routeNames } from "@/utils/routes";
 
 export default function PricingPage() {
   const [billingCycle, setBillingCycle] = useState("monthly");
@@ -241,7 +242,7 @@ function PricingCard({ plan, billingCycle, isPopular, index }) {
           </div>
         )}
 
-        <Link href="/dashboard">
+        <Link href={routeNames.dashboard}>
           <Button
             variant={isPopular ? "primary" : "outline"}
             size="large"

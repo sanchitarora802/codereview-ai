@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Button from "@/components/shared/Button";
 import useLayoutStore from "@/store/layoutStore";
+import { routeNames } from "@/utils/routes";
 
 export default function CTASection() {
   const { changeModal } = useLayoutStore();
@@ -23,7 +24,7 @@ export default function CTASection() {
           >
             Start Your Free Trial
           </Button>
-          <Link href="/pricing">
+          <Link href={routeNames.pricing}>
             <Button
               variant="outline"
               size="large"
