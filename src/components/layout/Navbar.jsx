@@ -6,11 +6,13 @@ import { NAV_LINKS, APP_CONFIG } from "@/constants";
 import FeatureIcon from "@/components/shared/FeatureIcon";
 import useLayoutStore from "@/store/layoutStore";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/authStore";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
   const { changeModal } = useLayoutStore();
+  const { user } = useAuthStore();
 
   const handleHashClick = (e, href) => {
     if (!href.startsWith("/#")) return;
@@ -19,7 +21,6 @@ export default function Navbar() {
     const el = document.getElementById(targetId);
     if (el) {
       el.classList.remove("animate-fadeIn");
-      // Force reflow to restart animation
       void el.offsetWidth;
       el.classList.add("animate-fadeIn");
       el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -28,13 +29,39 @@ export default function Navbar() {
       router.push("/");
       setTimeout(() => {
         let el = document.getElementById(targetId);
-        console.log("el", el, targetId);
         el?.classList.remove("animate-fadeIn");
         void el.offsetWidth;
         el.classList.add("animate-fadeIn");
         el.scrollIntoView({ behavior: "smooth", block: "start" });
         setMobileMenuOpen(false);
       }, 800);
+    }
+  };
+
+  const getUserDetails = () => {
+    if (user?.email) {
+      return (
+        <div
+          onClick={() => {
+            router.push("/dashboard");
+          }}
+          className="cursor-pointer flex flex-row justify-center items-center gap-2 border-2 border py-1 px-2 rounded-lg"
+        >
+          <FeatureIcon icon={"userprofile"} size={14} />
+          <span className="text-1xl font-bold text-gray-800">
+            {user.name || "Welcome user"}
+          </span>
+        </div>
+      );
+    } else {
+      return (
+        <button
+          onClick={() => changeModal("login")}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+        >
+          Get Started Free
+        </button>
+      );
     }
   };
 
@@ -61,12 +88,7 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <button
-              onClick={() => changeModal("login")}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-            >
-              Get Started Free
-            </button>
+            {getUserDetails()}
           </div>
 
           <button
@@ -89,12 +111,14 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/dashboard"
+            {/* 
+            <button
+              onClick={() => changeModal("login")}
               className="mt-4 w-full inline-block text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
             >
               Get Started Free
-            </Link>
+            </button> */}
+            {getUserDetails()}
           </div>
         )}
       </div>

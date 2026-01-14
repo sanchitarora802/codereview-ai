@@ -1,16 +1,17 @@
+import { routeNames } from "@/utils/routes";
+
 // Navigation Links
 export const NAV_LINKS = [
   { href: "/#features", label: "Features" },
   { href: "/#how-it-works", label: "How it Works" },
-  { href: "/pricing", label: "Pricing" },
-  // { href: "/dashboard", label: "Dashboard" },
+  { href: routeNames.pricing, label: "Pricing" },
 ];
 
 // Footer Links
 export const FOOTER_LINKS = {
   product: [
     { href: "/#features", label: "Features" },
-    { href: "/pricing", label: "Pricing" },
+    { href: routeNames.pricing, label: "Pricing" },
     { href: "/#how-it-works", label: "How-it-works" },
   ],
   company: [
