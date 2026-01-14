@@ -7,12 +7,13 @@ import FeatureIcon from "@/components/shared/FeatureIcon";
 import useLayoutStore from "@/store/layoutStore";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
+import { routeNames } from "@/utils/routes";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
   const { changeModal } = useLayoutStore();
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
 
   const handleHashClick = (e, href) => {
     if (!href.startsWith("/#")) return;
@@ -39,18 +40,49 @@ export default function Navbar() {
   };
 
   const getUserDetails = () => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const handleMenuToggle = () => {
+      setIsMenuOpen(!isMenuOpen);
+    };
+
     if (user?.email) {
       return (
         <div
-          onClick={() => {
-            router.push("/dashboard");
-          }}
-          className="cursor-pointer flex flex-row justify-center items-center gap-2 border-2 border py-1 px-2 rounded-lg"
+          onClick={handleMenuToggle}
+          className="relative cursor-pointer flex flex-row justify-center items-end gap-2 py-1 px-2 rounded-lg"
         >
-          <FeatureIcon icon={"userprofile"} size={14} />
-          <span className="text-1xl font-bold text-gray-800">
-            {user.name || "Welcome user"}
-          </span>
+          <FeatureIcon icon={"userprofile"} size={20} />
+          {!isMenuOpen ? (
+            <FeatureIcon icon={"chevronDown"} size={18} />
+          ) : (
+            <FeatureIcon icon={"chevronUp"} size={18} />
+          )}
+
+          {isMenuOpen && (
+            <ul className="absolute top-[45px] right-[-3px] w-40 overflow-hidden border border-2 rounded-lg">
+              <li className="flex justify-center items-center text-gray-800 hover:bg-gray-100 transition py-[10px] px-[10px]">
+                <a
+                  onClick={(e) => {
+                    e.preventDefault();
+                    router.push(routeNames.dashboard);
+                  }}
+                >
+                  Dashboard
+                </a>
+              </li>
+              <li className="flex justify-center items-center text-red-800 hover:hover:bg-gray-100 transition py-[10px] px-[10px]">
+                <a
+                  onClick={(e) => {
+                    e.preventDefault();
+                    logout();
+                  }}
+                >
+                  Logout
+                </a>
+              </li>
+            </ul>
+          )}
         </div>
       );
     } else {
@@ -111,13 +143,6 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            {/* 
-            <button
-              onClick={() => changeModal("login")}
-              className="mt-4 w-full inline-block text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-            >
-              Get Started Free
-            </button> */}
             {getUserDetails()}
           </div>
         )}

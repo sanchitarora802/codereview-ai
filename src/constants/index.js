@@ -304,9 +304,9 @@ export const APP_CONFIG = {
     "Get instant AI-powered feedback on your code. Find bugs, security issues, and performance problems.",
   copyright: "© 2025 CodeReviewAI. All rights reserved.",
   social: {
-    twitter: "https://twitter.com/codereviewai",
-    github: "https://github.com/codereviewai",
-    linkedin: "https://linkedin.com/company/codereviewai",
-    facebook: "https://facebook.com/codereviewai",
+    twitter: "#",
+    github: "#",
+    linkedin: "#",
+    facebook: "#",
   },
 };
