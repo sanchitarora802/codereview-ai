@@ -122,6 +122,7 @@ export const useAuthStore = create(
         });
         console.log("res", res);
         setCookie(process.env.NEXT_PUBLIC_Token, token);
+        registerRequestIntercept(token);
         if (data?.user) useLayoutStore.getState()?.changeModal("");
       } catch (err) {
         set({
@@ -135,5 +136,5 @@ export const useAuthStore = create(
       eraseCookie(process.env.NEXT_PUBLIC_Token);
       set({ user: null, stage: "email", currentEmail: "", error: null });
     },
-  }))
+  })),
 );
