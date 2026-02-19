@@ -1,25 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import CodeUploader from "@/components/shared/CodeUploader";
 import StatusBadge from "@/components/shared/StatusBadge";
 import Card from "@/components/shared/Card";
 import { ISSUE_TYPES } from "@/constants";
 import FeatureIcon from "../shared/FeatureIcon";
+import { useReviewStore } from "@/store/reviewStore";
 
 export default function DemoSection() {
-  const [demoResult, setDemoResult] = useState(null);
-
-  const handleAnalysis = (result) => {
-    // Add more detailed demo data
-    const enhancedResult = {
-      ...result,
-      executionTime: "2.3s",
-      linesAnalyzed: result.code ? result.code.split("\n").length : 50,
-      complexity: "Medium",
-    };
-    setDemoResult(enhancedResult);
-  };
+  const { reviewResult, error, isLoading } = useReviewStore();
 
   return (
     <section id="demo-section" className="container mx-auto px-4 py-20">
@@ -42,9 +31,19 @@ export default function DemoSection() {
             </div>
           </div>
 
-          <CodeUploader onAnalysis={handleAnalysis} isDemo={true} />
+          <CodeUploader isDemo={true} />
 
-          {demoResult && (
+          {/* Error Display */}
+          {error && (
+            <div className="mt-8 p-6 bg-red-50 border border-red-200 rounded-lg">
+              <div className="flex items-start gap-3">
+                <div className="text-red-600 font-semibold">⚠️ Error</div>
+                <p className="text-red-700">{error}</p>
+              </div>
+            </div>
+          )}
+
+          {reviewResult && (
             <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
               {/* Score Display */}
               <div className="flex justify-between items-center mb-6">
@@ -52,14 +51,14 @@ export default function DemoSection() {
                 <div className="text-center">
                   <div
                     className={`text-4xl font-bold ${
-                      demoResult.score >= 80
+                      reviewResult.score >= 80
                         ? "text-green-600"
-                        : demoResult.score >= 60
+                        : reviewResult.score >= 60
                         ? "text-yellow-600"
                         : "text-red-600"
                     }`}
                   >
-                    {demoResult.score}
+                    {reviewResult.score}
                   </div>
                   <div className="text-sm text-gray-600">Score</div>
                 </div>
@@ -69,38 +68,38 @@ export default function DemoSection() {
               <div className="grid grid-cols-4 gap-4 mb-6">
                 <div className="text-center p-3 bg-white rounded-lg">
                   <div className="text-xl font-bold text-gray-900">
-                    {demoResult.issues?.length || 0}
+                    {reviewResult.issues?.length || 0}
                   </div>
                   <div className="text-xs text-gray-600">Issues</div>
                 </div>
                 <div className="text-center p-3 bg-white rounded-lg">
                   <div className="text-xl font-bold text-gray-900">
-                    {demoResult.suggestions?.length || 0}
+                    {reviewResult.suggestions?.length || 0}
                   </div>
                   <div className="text-xs text-gray-600">Suggestions</div>
                 </div>
                 <div className="text-center p-3 bg-white rounded-lg">
                   <div className="text-xl font-bold text-gray-900">
-                    {demoResult.executionTime}
+                    {reviewResult.executionTime}
                   </div>
                   <div className="text-xs text-gray-600">Time</div>
                 </div>
                 <div className="text-center p-3 bg-white rounded-lg">
                   <div className="text-xl font-bold text-gray-900">
-                    {demoResult.linesAnalyzed}
+                    {reviewResult.linesAnalyzed}
                   </div>
                   <div className="text-xs text-gray-600">Lines</div>
                 </div>
               </div>
 
               {/* Issues */}
-              {demoResult.issues && demoResult.issues.length > 0 && (
+              {reviewResult.issues && reviewResult.issues.length > 0 && (
                 <div className="mb-6">
                   <h4 className="font-medium mb-3 text-gray-700">
                     Issues Found
                   </h4>
                   <div className="space-y-2">
-                    {demoResult.issues.map((issue, idx) => (
+                    {reviewResult.issues.map((issue, idx) => (
                       <div
                         key={idx}
                         className="flex items-start gap-3 p-3 bg-white rounded-lg"
@@ -123,13 +122,13 @@ export default function DemoSection() {
               )}
 
               {/* Suggestions */}
-              {demoResult.suggestions && demoResult.suggestions.length > 0 && (
+              {reviewResult.suggestions && reviewResult.suggestions.length > 0 && (
                 <div>
                   <h4 className="font-medium mb-3 text-gray-700">
                     Recommendations
                   </h4>
                   <ul className="space-y-2">
-                    {demoResult.suggestions.map((suggestion, idx) => (
+                    {reviewResult.suggestions.map((suggestion, idx) => (
                       <li key={idx} className="flex items-start gap-2">
                         <FeatureIcon
                           icon={"greenTick"}

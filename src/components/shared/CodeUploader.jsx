@@ -3,15 +3,17 @@
 import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { SUPPORTED_FILE_TYPES, DEMO_CODE_SAMPLES } from "@/constants";
+import { useReviewStore } from "@/store/reviewStore";
 import FeatureIcon from "./FeatureIcon";
 import Button from "./Button";
 import Loading from "./Loading";
 
-export default function CodeUploader({ onAnalysis, isDemo = false }) {
+export default function CodeUploader({ isDemo = false }) {
   const [code, setCode] = useState("");
   const [fileName, setFileName] = useState("");
-  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("paste");
+
+  const { submitReview, isLoading } = useReviewStore();
 
   const onDrop = useCallback(async (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -31,47 +33,17 @@ export default function CodeUploader({ onAnalysis, isDemo = false }) {
   const analyzeCode = async () => {
     if (!code.trim()) return;
 
-    setLoading(true);
-
+    const submitReviewParams = {
+      codeSnippet: code,
+      language: "js",
+      context: "",
+      title: "js-code-review",
+    };
     try {
-      if (isDemo) {
-        // Simulate API call for demo
-        setTimeout(() => {
-          onAnalysis({
-            score: Math.floor(Math.random() * 30) + 70,
-            issues: [
-              {
-                line: 5,
-                type: "warning",
-                message: "Consider using const instead of let",
-              },
-              {
-                line: 12,
-                type: "info",
-                message: "Function could be optimized",
-              },
-            ],
-            suggestions: ["Add error handling", "Improve naming conventions"],
-          });
-          setLoading(false);
-        }, 2000);
-      } else {
-        // Real API call
-        const response = await fetch(
-          `${API_ENDPOINTS.BASE_URL}${API_ENDPOINTS.ANALYZE}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ code, fileName }),
-          }
-        );
-        const result = await response.json();
-        onAnalysis(result);
-        setLoading(false);
-      }
+      await submitReview(submitReviewParams);
     } catch (error) {
+      // Error is already handled in the store
       console.error("Analysis failed:", error);
-      setLoading(false);
     }
   };
 
@@ -80,7 +52,7 @@ export default function CodeUploader({ onAnalysis, isDemo = false }) {
     setFileName(
       `sample.${
         language === "javascript" ? "js" : language === "python" ? "py" : "java"
-      }`
+      }`,
     );
   };
 
@@ -206,12 +178,12 @@ export default function CodeUploader({ onAnalysis, isDemo = false }) {
       {/* Analyze Button */}
       <Button
         onClick={analyzeCode}
-        disabled={!code.trim() || loading}
+        disabled={!code.trim() || isLoading}
         variant="primary"
         size="large"
         className="w-full mt-4"
       >
-        {loading ? (
+        {isLoading ? (
           <>
             <Loading size="small" text="" />
             Analyzing...
