@@ -55,6 +55,7 @@ export const useAuthStore = create(
         const res = await axiosInstance.post("/auth/signup", params);
         const { token, data } = res.data;
         setCookie(process.env.NEXT_PUBLIC_Token, token);
+        registerRequestIntercept(token);
         set({
           isLoading: false,
           user: data.user,
@@ -120,7 +121,6 @@ export const useAuthStore = create(
           user: data.user,
           stage: "email",
         });
-        console.log("res", res);
         setCookie(process.env.NEXT_PUBLIC_Token, token);
         registerRequestIntercept(token);
         if (data?.user) useLayoutStore.getState()?.changeModal("");
