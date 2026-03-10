@@ -1,36 +1,40 @@
 import FeatureIcon from "@/components/shared/FeatureIcon";
+import useDashboardStore from "@/store/dashboardStore";
 
-export default function DashboardStats({ stats }) {
+export default function DashboardStats() {
+  const { stats } = useDashboardStore();
+  const overview = stats?.overview;
+
   const statCards = [
     {
       label: "Total Reviews",
-      value: stats.totalReviews,
+      value: overview?.totalReviews,
       icon: "document",
-      change: `${stats.recentReviews} this week`,
+      change: `${overview?.reviewsThisWeek} this week`,
       color: "blue",
     },
     {
       label: "Average Score",
-      value: stats.avgScore,
+      value: overview?.averageScore,
       suffix: "/100",
       icon: "chart",
       color:
-        stats.avgScore >= 80
+        overview?.averageScore >= 80
           ? "green"
-          : stats.avgScore >= 60
-          ? "yellow"
-          : "red",
+          : overview?.averageScore >= 60
+            ? "yellow"
+            : "red",
     },
     {
       label: "Issues Found",
-      value: stats.totalIssues,
+      value: overview?.issuesFound,
       icon: "alert",
-      change: `${stats.improvements} improvements`,
+      change: `${overview?.improvements} improvements`,
       color: "orange",
     },
     {
       label: "Lines Analyzed",
-      value: stats.totalLines.toLocaleString(),
+      value: overview?.linesAnalyzed,
       icon: "code",
       color: "purple",
     },

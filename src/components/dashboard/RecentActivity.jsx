@@ -1,9 +1,11 @@
-import { formatRelativeTime } from "@/utils/helpers";
 import FeatureIcon from "@/components/shared/FeatureIcon";
+import useDashboardStore from "@/store/dashboardStore";
 
-export default function RecentActivity({ reviews }) {
+export default function RecentActivity() {
+  const { recentActivity } = useDashboardStore();
+
   // Get the 5 most recent reviews
-  const recentReviews = reviews.slice(0, 5);
+  const recentReviews = recentActivity?.slice(0, 5);
 
   const getActivityIcon = (score) => {
     if (score >= 80) {
@@ -27,7 +29,7 @@ export default function RecentActivity({ reviews }) {
     }
   };
 
-  if (recentReviews.length === 0) {
+  if (recentReviews?.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
@@ -45,13 +47,13 @@ export default function RecentActivity({ reviews }) {
       </h3>
 
       <div className="space-y-4">
-        {recentReviews.map((review, idx) => (
-          <div key={review._id} className="flex items-start gap-3">
+        {recentReviews?.map((review) => (
+          <div key={review.id} className="flex items-start gap-3">
             {getActivityIcon(review.score)}
 
             <div className="flex-1 min-w-0">
               <p className="text-sm text-gray-900">
-                <span className="font-medium">{review.filename}</span> analyzed
+                <span className="font-medium">{review.file}</span> analyzed
               </p>
               <div className="flex items-center gap-2 mt-1">
                 <span className="text-xs text-gray-500">
@@ -62,14 +64,12 @@ export default function RecentActivity({ reviews }) {
                   {review.issues} issues
                 </span>
                 <span className="text-xs text-gray-400">•</span>
-                <span className="text-xs text-gray-500">
-                  {formatRelativeTime(review.createdAt)}
-                </span>
+                <span className="text-xs text-gray-500">{review.timeAgo}</span>
               </div>
             </div>
 
             <a
-              href={`/review/${review._id}`}
+              href={`/review/${review.id}`}
               className="text-blue-600 hover:text-blue-700 text-sm"
             >
               View
@@ -77,8 +77,8 @@ export default function RecentActivity({ reviews }) {
           </div>
         ))}
       </div>
-
-      {reviews.length > 5 && (
+      {/* 
+      {recentReviews?.length > 5 && (
         <div className="mt-4 pt-4 border-t border-gray-200">
           <a
             href="#"
@@ -88,7 +88,7 @@ export default function RecentActivity({ reviews }) {
             <FeatureIcon icon="arrowRight" size={14} />
           </a>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

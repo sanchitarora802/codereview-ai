@@ -1,101 +1,24 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import DashboardStats from "@/components/dashboard/DashboardStats";
 import ReviewsList from "@/components/dashboard/ReviewsList";
 import FilterBar from "@/components/dashboard/FilterBar";
 import EmptyState from "@/components/dashboard/EmptyState";
+import Pagination from "@/components/dashboard/Pagination";
 import ScoreChart from "@/components/dashboard/ScoreChart";
 import RecentActivity from "@/components/dashboard/RecentActivity";
 import Loading from "@/components/shared/Loading";
 import Button from "@/components/shared/Button";
 import FeatureIcon from "@/components/shared/FeatureIcon";
 import CodeReviewModal from "@/components/Modals/CodeReviewModal";
-
-// Mock data for development - replace with API calls
-const MOCK_REVIEWS = [
-  {
-    _id: "1",
-    filename: "AuthComponent.jsx",
-    language: "javascript",
-    score: 85,
-    issues: 3,
-    linesOfCode: 245,
-    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
-    status: "completed",
-    improvements: 5,
-  },
-  {
-    _id: "2",
-    filename: "user_service.py",
-    language: "python",
-    score: 72,
-    issues: 8,
-    linesOfCode: 189,
-    createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
-    status: "completed",
-    improvements: 12,
-  },
-  {
-    _id: "3",
-    filename: "PaymentController.java",
-    language: "java",
-    score: 91,
-    issues: 2,
-    linesOfCode: 456,
-    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-    status: "completed",
-    improvements: 3,
-  },
-  {
-    _id: "4",
-    filename: "api_routes.js",
-    language: "javascript",
-    score: 68,
-    issues: 12,
-    linesOfCode: 334,
-    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-    status: "completed",
-    improvements: 15,
-  },
-  {
-    _id: "5",
-    filename: "database.py",
-    language: "python",
-    score: 88,
-    issues: 4,
-    linesOfCode: 567,
-    createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-    status: "completed",
-    improvements: 6,
-  },
-  {
-    _id: "6",
-    filename: "utils.ts",
-    language: "typescript",
-    score: 79,
-    issues: 6,
-    linesOfCode: 223,
-    createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
-    status: "completed",
-    improvements: 8,
-  },
-  {
-    _id: "7",
-    filename: "main.go",
-    language: "go",
-    score: 94,
-    issues: 1,
-    linesOfCode: 890,
-    createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
-    status: "completed",
-    improvements: 2,
-  },
-];
+import useDashboardStore from "@/store/dashboardStore";
+import { useAuthStore } from "@/store/authStore";
 
 export default function DashboardPage() {
-  const [loading, setLoading] = useState(true);
-  const [reviews, setReviews] = useState([]);
+  const { tableData, isLoading, fetchStats, fetchData, setFilteredTableData } = useDashboardStore();
+  const { user } = useAuthStore();
+  const reviews = useMemo(() => tableData || [], [tableData]);
   const [filteredReviews, setFilteredReviews] = useState([]);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadResult, setUploadResult] = useState(null);
@@ -108,14 +31,13 @@ export default function DashboardPage() {
     sortBy: "recent",
   });
 
-  // Simulate API call
   useEffect(() => {
-    setTimeout(() => {
-      setReviews(MOCK_REVIEWS);
-      setFilteredReviews(MOCK_REVIEWS);
-      setLoading(false);
-    }, 1000);
-  }, []);
+    if (user) fetchStats();
+  }, [user]);
+
+  useEffect(() => {
+    if (user) fetchData();
+  }, [user]);
 
   // Apply filters
   useEffect(() => {
@@ -123,7 +45,7 @@ export default function DashboardPage() {
 
     if (filters.search) {
       filtered = filtered.filter((review) =>
-        review.filename.toLowerCase().includes(filters.search.toLowerCase()),
+        review.file.toLowerCase().includes(filters.search.toLowerCase()),
       );
     }
 
@@ -174,13 +96,14 @@ export default function DashboardPage() {
         case "score-low":
           return a.score - b.score;
         case "name":
-          return a.filename.localeCompare(b.filename);
+          return a.file.localeCompare(b.file);
         default:
           return 0;
       }
     });
 
     setFilteredReviews(filtered);
+    setFilteredTableData(filtered);
   }, [filters, reviews]);
 
   const handleFilterChange = (filterType, value) => {
@@ -197,19 +120,7 @@ export default function DashboardPage() {
   const handleCodeAnalysis = (result) => {
     setUploadResult(result);
 
-    const newReview = {
-      _id: Date.now().toString(),
-      filename: "NewCode.js",
-      language: "javascript",
-      score: result.score,
-      issues: result.issues?.length || 0,
-      linesOfCode: 150,
-      improvements: result.suggestions?.length || 0,
-      createdAt: new Date(),
-      status: "completed",
-    };
-
-    setReviews((prev) => [newReview, ...prev]);
+    fetchStats();
 
     setTimeout(() => {
       setShowUploadModal(false);
@@ -217,23 +128,7 @@ export default function DashboardPage() {
     }, 1500);
   };
 
-  const stats = {
-    totalReviews: reviews.length,
-    avgScore: reviews.length
-      ? Math.round(
-          reviews.reduce((acc, r) => acc + r.score, 0) / reviews.length,
-        )
-      : 0,
-    totalIssues: reviews.reduce((acc, r) => acc + r.issues, 0),
-    totalLines: reviews.reduce((acc, r) => acc + r.linesOfCode, 0),
-    recentReviews: reviews.filter(
-      (r) =>
-        new Date(r.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-    ).length,
-    improvements: reviews.reduce((acc, r) => acc + (r.improvements || 0), 0),
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loading size="large" text="Loading dashboard..." />
@@ -256,7 +151,10 @@ export default function DashboardPage() {
             <div className="flex gap-3">
               <Button
                 variant="secondary"
-                onClick={() => window.location.reload()}
+                onClick={() => {
+                  fetchStats();
+                  fetchData();
+                }}
               >
                 <FeatureIcon icon="refresh" size={16} />
                 Refresh
@@ -276,15 +174,13 @@ export default function DashboardPage() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Stats Grid */}
-        <DashboardStats stats={stats} />
+        <DashboardStats />
 
         {/* Charts and Activity Row */}
-        {reviews.length > 0 && (
-          <div className="grid lg:grid-cols-2 gap-6 mb-8">
-            <ScoreChart reviews={reviews} />
-            <RecentActivity reviews={reviews} />
-          </div>
-        )}
+        <div className="grid lg:grid-cols-2 gap-6 mb-8">
+          <ScoreChart />
+          <RecentActivity />
+        </div>
 
         {/* Filter Bar */}
         <FilterBar
@@ -323,11 +219,7 @@ export default function DashboardPage() {
 
         {/* Reviews List or Empty State */}
         {filteredReviews.length > 0 ? (
-          viewMode === "list" ? (
-            <ReviewsList reviews={filteredReviews} />
-          ) : (
-            <ReviewsGrid reviews={filteredReviews} />
-          )
+          viewMode === "list" ? <ReviewsList /> : <ReviewsGrid />
         ) : reviews.length > 0 ? (
           <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-12 text-center">
             <FeatureIcon
@@ -360,6 +252,8 @@ export default function DashboardPage() {
         ) : (
           <EmptyState onUploadClick={() => setShowUploadModal(true)} />
         )}
+
+        <Pagination />
       </div>
 
       {/* Upload Modal */}
@@ -376,7 +270,10 @@ export default function DashboardPage() {
 }
 
 // Grid View Component
-function ReviewsGrid({ reviews }) {
+function ReviewsGrid() {
+  const { filteredTableData, tableData } = useDashboardStore();
+  const reviews = filteredTableData ?? tableData ?? [];
+
   const getScoreColor = (score) => {
     if (score >= 80) return "text-green-600 bg-green-50 border-green-200";
     if (score >= 60) return "text-yellow-600 bg-yellow-50 border-yellow-200";
@@ -387,13 +284,13 @@ function ReviewsGrid({ reviews }) {
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       {reviews.map((review) => (
         <div
-          key={review._id}
+          key={review.id}
           className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 hover:shadow-lg transition"
         >
           <div className="flex justify-between items-start mb-4">
             <div className="flex-1">
               <h3 className="font-semibold text-gray-900 truncate">
-                {review.filename}
+                {review.file}
               </h3>
               <p className="text-sm text-gray-500 mt-1">{review.language}</p>
             </div>
@@ -422,11 +319,9 @@ function ReviewsGrid({ reviews }) {
           </div>
 
           <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-            <span className="text-xs text-gray-500">
-              {new Date(review.createdAt).toLocaleDateString()}
-            </span>
+            <span className="text-xs text-gray-500">{review.timeAgo}</span>
             <a
-              href={`/review/${review._id}`}
+              href={`/review/${review.id}`}
               className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
             >
               View Details
