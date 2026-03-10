@@ -1,17 +1,27 @@
 import Link from "next/link";
 import FeatureIcon from "@/components/shared/FeatureIcon";
-import { formatRelativeTime, getScoreColor } from "@/utils/helpers";
+import { getScoreColor } from "@/utils/helpers";
+import useDashboardStore from "@/store/dashboardStore";
 
-export default function ReviewsList({ reviews }) {
+export default function ReviewsList() {
+  const { filteredTableData, tableData } = useDashboardStore();
+  const reviews = filteredTableData ?? tableData ?? [];
+
   const getLanguageColor = (language) => {
     const colors = {
       javascript: "bg-yellow-100 text-yellow-800",
+      js: "bg-yellow-100 text-yellow-800",
       python: "bg-blue-100 text-blue-800",
+      py: "bg-blue-100 text-blue-800",
       java: "bg-orange-100 text-orange-800",
       typescript: "bg-blue-100 text-blue-800",
+      ts: "bg-blue-100 text-blue-800",
       go: "bg-cyan-100 text-cyan-800",
       ruby: "bg-red-100 text-red-800",
       php: "bg-purple-100 text-purple-800",
+      rust: "bg-orange-100 text-orange-900",
+      cpp: "bg-pink-100 text-pink-800",
+      c: "bg-gray-100 text-gray-800",
     };
     return colors[language] || "bg-gray-100 text-gray-800";
   };
@@ -59,7 +69,7 @@ export default function ReviewsList({ reviews }) {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {reviews.map((review) => (
-              <tr key={review._id} className="hover:bg-gray-50 transition">
+              <tr key={review.id} className="hover:bg-gray-50 transition">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
@@ -71,7 +81,7 @@ export default function ReviewsList({ reviews }) {
                     </div>
                     <div className="ml-4">
                       <div className="text-sm font-medium text-gray-900">
-                        {review.filename}
+                        {review.file}
                       </div>
                       <div className="text-sm text-gray-500">
                         {review.improvements} improvements suggested
@@ -90,9 +100,9 @@ export default function ReviewsList({ reviews }) {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-center">
                   <div className="flex items-center justify-center gap-2">
-                    {getScoreIcon(review.score)}
+                    <span className="flex-shrink-0">{getScoreIcon(review.score)}</span>
                     <span
-                      className={`text-lg font-bold ${getScoreColor(
+                      className={`text-lg font-bold w-8 text-left tabular-nums ${getScoreColor(
                         review.score
                       )}`}
                     >
@@ -104,12 +114,14 @@ export default function ReviewsList({ reviews }) {
                   <div className="flex items-center justify-center">
                     {review.issues > 0 ? (
                       <span className="inline-flex items-center gap-1">
-                        <FeatureIcon
-                          icon="warning"
-                          size={16}
-                          className="text-orange-500"
-                        />
-                        <span className="text-orange-600 font-medium">
+                        <span className="flex-shrink-0">
+                          <FeatureIcon
+                            icon="warning"
+                            size={16}
+                            className="text-orange-500"
+                          />
+                        </span>
+                        <span className="text-orange-600 font-medium w-6 text-left tabular-nums">
                           {review.issues}
                         </span>
                       </span>
@@ -119,15 +131,15 @@ export default function ReviewsList({ reviews }) {
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
-                  {review.linesOfCode.toLocaleString()}
+                  {review.linesOfCode?.toLocaleString()}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {formatRelativeTime(review.createdAt)}
+                  {review.timeAgo}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                   <div className="flex items-center justify-center gap-2">
                     <Link
-                      href={`/review/${review._id}`}
+                      href={`/review/${review.id}`}
                       className="text-blue-600 hover:text-blue-900"
                     >
                       View
