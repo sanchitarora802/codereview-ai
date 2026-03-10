@@ -123,13 +123,13 @@ export default function DashboardPage() {
 
     if (filters.search) {
       filtered = filtered.filter((review) =>
-        review.filename.toLowerCase().includes(filters.search.toLowerCase())
+        review.filename.toLowerCase().includes(filters.search.toLowerCase()),
       );
     }
 
     if (filters.language !== "all") {
       filtered = filtered.filter(
-        (review) => review.language === filters.language
+        (review) => review.language === filters.language,
       );
     }
 
@@ -144,7 +144,7 @@ export default function DashboardPage() {
         filtered = filtered.filter(
           (review) =>
             new Date(review.createdAt) >
-            new Date(now - ranges[filters.dateRange])
+            new Date(now - ranges[filters.dateRange]),
         );
       }
     }
@@ -158,7 +158,7 @@ export default function DashboardPage() {
       if (ranges[filters.scoreRange]) {
         const [min, max] = ranges[filters.scoreRange];
         filtered = filtered.filter(
-          (review) => review.score >= min && review.score <= max
+          (review) => review.score >= min && review.score <= max,
         );
       }
     }
@@ -221,14 +221,14 @@ export default function DashboardPage() {
     totalReviews: reviews.length,
     avgScore: reviews.length
       ? Math.round(
-          reviews.reduce((acc, r) => acc + r.score, 0) / reviews.length
+          reviews.reduce((acc, r) => acc + r.score, 0) / reviews.length,
         )
       : 0,
     totalIssues: reviews.reduce((acc, r) => acc + r.issues, 0),
     totalLines: reviews.reduce((acc, r) => acc + r.linesOfCode, 0),
     recentReviews: reviews.filter(
       (r) =>
-        new Date(r.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+        new Date(r.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
     ).length,
     improvements: reviews.reduce((acc, r) => acc + (r.improvements || 0), 0),
   };
@@ -399,7 +399,7 @@ function ReviewsGrid({ reviews }) {
             </div>
             <div
               className={`px-3 py-1 rounded-lg border ${getScoreColor(
-                review.score
+                review.score,
               )}`}
             >
               <span className="font-bold text-lg">{review.score}</span>
