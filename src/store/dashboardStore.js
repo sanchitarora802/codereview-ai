@@ -3,7 +3,8 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
 const useDashboardStore = create(
-  devtools((set) => ({
+  devtools((set, get) => ({
+    refreshDisabled: false,
     stats: null,
     recentActivity: null,
     tableData: null,
@@ -11,6 +12,13 @@ const useDashboardStore = create(
     tablePagination: null,
     isLoading: false,
     error: null,
+
+    disableRefresh: () => {
+      set({ refreshDisabled: true });
+      setTimeout(() => {
+        set({ refreshDisabled: false });
+      }, 600000);
+    },
 
     fetchStats: async () => {
       set({ isLoading: true, error: null });
@@ -31,6 +39,7 @@ const useDashboardStore = create(
 
     fetchData: async (page = 1) => {
       set({ isLoading: true, error: null });
+      get().disableRefresh();
       try {
         const res = await axiosInstance.get("/data", { params: { page } });
         set({
