@@ -14,11 +14,21 @@ import FeatureIcon from "@/components/shared/FeatureIcon";
 import CodeReviewModal from "@/components/Modals/CodeReviewModal";
 import useDashboardStore from "@/store/dashboardStore";
 import { useAuthStore } from "@/store/authStore";
+import Tooltip from "@/components/shared/Tooltip";
 
 export default function DashboardPage() {
-  const { tableData, isLoading, fetchStats, fetchData, setFilteredTableData } = useDashboardStore();
+  const {
+    refreshDisabled,
+    disableRefresh,
+    tableData,
+    isLoading,
+    fetchStats,
+    fetchData,
+    setFilteredTableData,
+  } = useDashboardStore();
   const { user } = useAuthStore();
   const reviews = useMemo(() => tableData || [], [tableData]);
+
   const [filteredReviews, setFilteredReviews] = useState([]);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadResult, setUploadResult] = useState(null);
@@ -36,7 +46,9 @@ export default function DashboardPage() {
   }, [user]);
 
   useEffect(() => {
-    if (user) fetchData();
+    if (user) {
+      fetchData();
+    }
   }, [user]);
 
   // Apply filters
@@ -148,31 +160,59 @@ export default function DashboardPage() {
                 Monitor your code quality and review history
               </p>
             </div>
-            <div className="flex gap-3">
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  fetchStats();
-                  fetchData();
-                }}
-              >
-                <FeatureIcon icon="refresh" size={16} />
-                Refresh
-              </Button>
-              <Button
-                variant="primary"
-                size="large"
-                onClick={() => setShowUploadModal(true)}
-              >
-                <FeatureIcon icon="plus" size={20} />
-                New Review
-              </Button>
+            <div className="flex flex-col items-end gap-2">
+              <div className="flex items-center gap-1.5 bg-blue-50 border border-blue-200 rounded-full px-4 py-1.5 text-sm">
+                <span className="font-medium text-blue-500">Tokens:</span>
+                <Tooltip content="Tokens consumed">
+                  <span className="font-bold text-blue-700 cursor-default">
+                    {user?.totalTokensUsed ?? 0}
+                  </span>
+                </Tooltip>
+                <span className="text-blue-300">/</span>
+                <Tooltip content="Total tokens available">
+                  <span className="font-semibold text-blue-500 cursor-default">
+                    {user?.totalTokens ?? 0}
+                  </span>
+                </Tooltip>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-8">
+        <div className="flex justify-end gap-3 mb-6">
+          {refreshDisabled ? (
+            <Tooltip content="Data update in progress. check after 10 min" place="left">
+              <Button variant="secondary" size="small" disabled>
+                <FeatureIcon icon="refresh" size={14} />
+                Refresh
+              </Button>
+            </Tooltip>
+          ) : (
+            <Button
+              variant="secondary"
+              size="small"
+              onClick={() => {
+                fetchStats();
+                fetchData();
+                disableRefresh();
+              }}
+            >
+              <FeatureIcon icon="refresh" size={14} />
+              Refresh
+            </Button>
+          )}
+          <Button
+            variant="primary"
+            size="small"
+            onClick={() => setShowUploadModal(true)}
+          >
+            <FeatureIcon icon="plus" size={14} />
+            New Review
+          </Button>
+        </div>
+
         {/* Stats Grid */}
         <DashboardStats />
 
@@ -219,7 +259,11 @@ export default function DashboardPage() {
 
         {/* Reviews List or Empty State */}
         {filteredReviews.length > 0 ? (
-          viewMode === "list" ? <ReviewsList /> : <ReviewsGrid />
+          viewMode === "list" ? (
+            <ReviewsList />
+          ) : (
+            <ReviewsGrid />
+          )
         ) : reviews.length > 0 ? (
           <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-12 text-center">
             <FeatureIcon
@@ -265,6 +309,7 @@ export default function DashboardPage() {
           handleCodeAnalysis={handleCodeAnalysis}
         />
       )}
+
     </div>
   );
 }

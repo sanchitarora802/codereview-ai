@@ -78,11 +78,7 @@ export const useAuthStore = create(
       });
 
       if (!token) {
-        set({
-          isLoading: false,
-          error: "No token found!!",
-        });
-        logout();
+        set({ isLoading: false });
         return;
       }
       registerRequestIntercept(token);
@@ -133,8 +129,10 @@ export const useAuthStore = create(
     },
 
     logout: () => {
+      const wasLoggedIn = !!get().user;
       eraseCookie(process.env.NEXT_PUBLIC_Token);
       set({ user: null, stage: "email", currentEmail: "", error: null });
+      if (wasLoggedIn && typeof window !== "undefined" && window.location.pathname !== "/") window.location.href = "/";
     },
   })),
 );
