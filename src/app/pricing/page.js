@@ -230,27 +230,33 @@ function PricingCard({ plan, billingCycle, isPopular, index }) {
         </div>
 
         {/* original price for yearly billing - styled inline with theme */}
-        {originalPrice && billingCycle === "yearly" && (
-          <div className="flex items-center justify-center gap-2 mt-3">
-            <span className="text-base text-gray-500 line-through">
-              ${originalPrice}
-            </span>
-            <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
-              Save {Math.round(((originalPrice - price) / originalPrice) * 100)}
-              %
-            </span>
-          </div>
-        )}
+        <div className="flex items-center justify-center gap-2 mt-3 mb-3 h-6">
+          {originalPrice > 0 && billingCycle === "yearly" && isPopular && (
+            <>
+              <span className="text-base text-gray-500 line-through">
+                ${originalPrice}
+              </span>
+              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                Save {Math.round(((originalPrice - price) / originalPrice) * 100)}%
+              </span>
+            </>
+          )}
+        </div>
 
-        <Link href={routeNames.dashboard}>
-          <Button
-            variant={isPopular ? "primary" : "outline"}
-            size="large"
-            className="w-full"
-          >
-            {plan.cta}
-          </Button>
-        </Link>
+        <Button
+          disabled={plan?.id?.toLowerCase() === "starter"}
+          variant={isPopular ? "primary" : "outline"}
+          size="large"
+          className="w-full"
+          onClick={() => {
+            if (plan?.id?.toLowerCase() === "starter") return;
+            else {
+              console.log("pricing clicked");
+            }
+          }}
+        >
+          {plan.cta}
+        </Button>
       </div>
 
       <div className="space-y-4">

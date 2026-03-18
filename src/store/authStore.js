@@ -132,7 +132,12 @@ export const useAuthStore = create(
       const wasLoggedIn = !!get().user;
       eraseCookie(process.env.NEXT_PUBLIC_Token);
       set({ user: null, stage: "email", currentEmail: "", error: null });
-      if (wasLoggedIn && typeof window !== "undefined" && window.location.pathname !== "/") window.location.href = "/";
+      if (
+        wasLoggedIn &&
+        typeof window !== "undefined" &&
+        window.location.pathname !== "/"
+      )
+        window.location.href = "/";
     },
   })),
 );

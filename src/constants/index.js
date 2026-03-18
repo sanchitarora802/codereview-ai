@@ -179,8 +179,9 @@ export const PRICING_PLANS = [
     description: "Perfect for individual developers and small projects",
     monthlyPrice: 0,
     yearlyPrice: 0,
+    originalPrice: 0,
     popular: false,
-    cta: "Get Started Free",
+    cta: "Free",
     features: [
       "basic-analysis",
       "security-scan",
@@ -192,8 +193,9 @@ export const PRICING_PLANS = [
     id: "professional",
     name: "Professional",
     description: "Ideal for growing teams and serious developers",
-    monthlyPrice: 29,
-    yearlyPrice: 279,
+    monthlyPrice: 19,
+    yearlyPrice: 182.6,
+    originalPrice: 228,
     popular: true,
     cta: "Start Free Trial",
     features: [
