@@ -12,11 +12,12 @@ export default function Modal({
   showFooter = false,
   footerContent,
   className = "",
+  preventClose = false,
 }) {
   // Close modal on Escape key
   useEffect(() => {
     const handleEscape = (e) => {
-      if (e.key === "Escape") {
+      if (e.key === "Escape" && !preventClose) {
         onClose();
       }
     };
@@ -45,7 +46,7 @@ export default function Modal({
         {/* Backdrop */}
         <div
           className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
-          onClick={onClose}
+          onClick={preventClose ? undefined : onClose}
           aria-hidden="true"
         />
 

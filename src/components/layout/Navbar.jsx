@@ -9,6 +9,60 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 import { routeNames } from "@/utils/routes";
 
+function UserMenu({ user, logout, changeModal, router }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  if (user?.email) {
+    return (
+      <div
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+        className="relative cursor-pointer flex flex-row justify-center items-end gap-2 py-1 px-2 rounded-lg"
+      >
+        <FeatureIcon icon={"userprofile"} size={20} />
+        {!isMenuOpen ? (
+          <FeatureIcon icon={"chevronDown"} size={18} />
+        ) : (
+          <FeatureIcon icon={"chevronUp"} size={18} />
+        )}
+
+        {isMenuOpen && (
+          <ul className="absolute top-[45px] right-[-3px] w-40 overflow-hidden border border-2 rounded-lg bg-white shadow-md z-50">
+            <li className="flex justify-center items-center text-gray-800 hover:bg-gray-100 transition py-[10px] px-[10px]">
+              <a
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push(routeNames.dashboard);
+                }}
+              >
+                Dashboard
+              </a>
+            </li>
+            <li className="flex justify-center items-center text-red-800 hover:bg-gray-100 transition py-[10px] px-[10px]">
+              <a
+                onClick={(e) => {
+                  e.preventDefault();
+                  logout();
+                }}
+              >
+                Logout
+              </a>
+            </li>
+          </ul>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <button
+      onClick={() => changeModal("login")}
+      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+    >
+      Get Started Free
+    </button>
+  );
+}
+
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
@@ -39,63 +93,6 @@ export default function Navbar() {
     }
   };
 
-  const getUserDetails = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-    const handleMenuToggle = () => {
-      setIsMenuOpen(!isMenuOpen);
-    };
-
-    if (user?.email) {
-      return (
-        <div
-          onClick={handleMenuToggle}
-          className="relative cursor-pointer flex flex-row justify-center items-end gap-2 py-1 px-2 rounded-lg"
-        >
-          <FeatureIcon icon={"userprofile"} size={20} />
-          {!isMenuOpen ? (
-            <FeatureIcon icon={"chevronDown"} size={18} />
-          ) : (
-            <FeatureIcon icon={"chevronUp"} size={18} />
-          )}
-
-          {isMenuOpen && (
-            <ul className="absolute top-[45px] right-[-3px] w-40 overflow-hidden border border-2 rounded-lg">
-              <li className="flex justify-center items-center text-gray-800 hover:bg-gray-100 transition py-[10px] px-[10px]">
-                <a
-                  onClick={(e) => {
-                    e.preventDefault();
-                    router.push(routeNames.dashboard);
-                  }}
-                >
-                  Dashboard
-                </a>
-              </li>
-              <li className="flex justify-center items-center text-red-800 hover:hover:bg-gray-100 transition py-[10px] px-[10px]">
-                <a
-                  onClick={(e) => {
-                    e.preventDefault();
-                    logout();
-                  }}
-                >
-                  Logout
-                </a>
-              </li>
-            </ul>
-          )}
-        </div>
-      );
-    } else {
-      return (
-        <button
-          onClick={() => changeModal("login")}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-        >
-          Get Started Free
-        </button>
-      );
-    }
-  };
 
   return (
     <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
@@ -120,7 +117,7 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            {getUserDetails()}
+            <UserMenu user={user} logout={logout} changeModal={changeModal} router={router} />
           </div>
 
           <button
@@ -143,7 +140,7 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            {getUserDetails()}
+            <UserMenu user={user} logout={logout} changeModal={changeModal} router={router} />
           </div>
         )}
       </div>

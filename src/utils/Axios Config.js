@@ -25,6 +25,7 @@ const getErrorState = (error) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
   }
+  return Promise.reject(error);
 };
 
 axiosInstance.interceptors.response.use(

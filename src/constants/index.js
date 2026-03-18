@@ -174,7 +174,7 @@ export const ISSUE_TYPES = {
 // Pricing Plans
 export const PRICING_PLANS = [
   {
-    id: "starter",
+    id: process.env.NEXT_PUBLIC_STARTER_PLAN_NAME,
     name: "Starter",
     description: "Perfect for individual developers and small projects",
     monthlyPrice: 0,
@@ -190,7 +190,7 @@ export const PRICING_PLANS = [
     ],
   },
   {
-    id: "professional",
+    id: process.env.NEXT_PUBLIC_PROFFESIONAL_PLAN_NAME,
     name: "Professional",
     description: "Ideal for growing teams and serious developers",
     monthlyPrice: 19,
