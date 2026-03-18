@@ -1,17 +1,22 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState, useEffect } from "react";
 import Button from "@/components/shared/Button";
 import Card from "@/components/shared/Card";
 import FeatureIcon from "@/components/shared/FeatureIcon";
 import { PRICING_PLANS, PRICING_FEATURES, FAQ_DATA } from "@/constants";
 import useLayoutStore from "@/store/layoutStore";
-import { routeNames } from "@/utils/routes";
+import { useAuthStore } from "@/store/authStore";
 
 export default function PricingPage() {
-  const [billingCycle, setBillingCycle] = useState("monthly");
+  const [billingCycle, setBillingCycle] = useState("yearly");
+  const [mounted, setMounted] = useState(false);
   const { changeModal } = useLayoutStore();
+  const { user } = useAuthStore();
+
+  useEffect(() => {
+    setMounted(true);
+  }, [user]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -83,6 +88,11 @@ export default function PricingPage() {
                 billingCycle={billingCycle}
                 isPopular={plan.popular}
                 index={index}
+                isCurrentPlan={
+                  mounted &&
+                  !!user?.email &&
+                  user?.planId?.toLowerCase() === plan.id?.toLowerCase()
+                }
               />
             ))}
           </div>
@@ -206,7 +216,7 @@ export default function PricingPage() {
   );
 }
 
-function PricingCard({ plan, billingCycle, isPopular, index }) {
+function PricingCard({ plan, billingCycle, isPopular, index, isCurrentPlan }) {
   const price =
     billingCycle === "yearly" ? plan.yearlyPrice : plan.monthlyPrice;
   const originalPrice =
@@ -214,8 +224,25 @@ function PricingCard({ plan, billingCycle, isPopular, index }) {
 
   return (
     <Card
-      className={`relative p-8 ${"hover:shadow-lg transition-shadow duration-200"}`}
+      border={false}
+      className={`relative p-8 hover:shadow-lg transition-shadow duration-200 ${isCurrentPlan ? "border-2 border-blue-500" : "border border-gray-100"}`}
     >
+      {isCurrentPlan && (
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-500 rounded-full p-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4 text-white"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </div>
+      )}
       <div className="text-center mb-8">
         <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
         <p className="text-gray-600 mb-6">{plan.description}</p>
@@ -237,7 +264,8 @@ function PricingCard({ plan, billingCycle, isPopular, index }) {
                 ${originalPrice}
               </span>
               <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                Save {Math.round(((originalPrice - price) / originalPrice) * 100)}%
+                Save{" "}
+                {Math.round(((originalPrice - price) / originalPrice) * 100)}%
               </span>
             </>
           )}

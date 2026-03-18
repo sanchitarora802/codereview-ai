@@ -8,12 +8,12 @@ import FeatureIcon from "./FeatureIcon";
 import Button from "./Button";
 import Loading from "./Loading";
 
-export default function CodeUploader({ isDemo = false }) {
+export default function CodeUploader({ isDemo = false, onAnalysis }) {
   const [code, setCode] = useState("");
   const [fileName, setFileName] = useState("");
   const [activeTab, setActiveTab] = useState("paste");
 
-  const { submitReview, isLoading } = useReviewStore();
+  const { analyzeCode, isLoading } = useReviewStore();
 
   const onDrop = useCallback(async (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -29,23 +29,6 @@ export default function CodeUploader({ isDemo = false }) {
     accept: SUPPORTED_FILE_TYPES,
     maxFiles: 1,
   });
-
-  const analyzeCode = async () => {
-    if (!code.trim()) return;
-
-    const submitReviewParams = {
-      codeSnippet: code,
-      language: "js",
-      context: "",
-      title: "js-code-review",
-    };
-    try {
-      await submitReview(submitReviewParams);
-    } catch (error) {
-      // Error is already handled in the store
-      console.error("Analysis failed:", error);
-    }
-  };
 
   const loadSampleCode = (language) => {
     setCode(DEMO_CODE_SAMPLES[language]);
@@ -177,7 +160,11 @@ export default function CodeUploader({ isDemo = false }) {
 
       {/* Analyze Button */}
       <Button
-        onClick={analyzeCode}
+        onClick={async () => {
+          if (!code.trim()) return;
+          const result = await analyzeCode(code, fileName || activeTab);
+          if (result) onAnalysis?.(result);
+        }}
         disabled={!code.trim() || isLoading}
         variant="primary"
         size="large"
