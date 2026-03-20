@@ -2,9 +2,14 @@ import Link from "next/link";
 import Button from "@/components/shared/Button";
 import useLayoutStore from "@/store/layoutStore";
 import { routeNames } from "@/utils/routes";
+import { useAuthStore } from "@/store/authStore";
+import { useRouter } from "next/navigation";
 
 export default function CTASection() {
   const { changeModal } = useLayoutStore();
+  const { user } = useAuthStore();
+  const router = useRouter();
+
   return (
     <section className="bg-gradient-to-r from-blue-600 to-purple-600 py-20">
       <div className="container mx-auto px-4 text-center">
@@ -15,25 +20,26 @@ export default function CTASection() {
           Join thousands of developers who are shipping higher quality code with
           confidence
         </p>
+        {!user && (
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button
-            onClick={() => changeModal("login")}
-            variant="secondary"
-            size="large"
-            className="bg-white text-blue-600 hover:bg-gray-100"
-          >
-            Start Your Free Trial
-          </Button>
-          <Link href={routeNames.pricing}>
+            <Button
+              onClick={() => changeModal("login")}
+              variant="secondary"
+              size="large"
+              className="bg-white text-blue-600 hover:bg-gray-100"
+            >
+              Start Your Free Trial
+            </Button>
             <Button
               variant="outline"
               size="large"
               className="text-white border-white hover:bg-white/10"
+              onClick={() => router.push(routeNames.pricing)}
             >
               View Pricing Plans
             </Button>
-          </Link>
         </div>
+        )}
 
         <div className="mt-12 flex items-center justify-center gap-8 text-white/80">
           <div className="text-center">
