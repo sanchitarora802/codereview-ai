@@ -119,7 +119,10 @@ export const useAuthStore = create(
         });
         setCookie(process.env.NEXT_PUBLIC_Token, token);
         registerRequestIntercept(token);
-        if (data?.user) useLayoutStore.getState()?.changeModal("");
+        if (data?.user) {
+          useLayoutStore.getState()?.changeModal("");
+          window.location.replace("/dashboard");
+        }
       } catch (err) {
         set({
           isLoading: false,
