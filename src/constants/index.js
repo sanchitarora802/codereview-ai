@@ -2,7 +2,6 @@ import { routeNames } from "@/utils/routes";
 
 // Navigation Links
 export const NAV_LINKS = [
-  { href: "/#features", label: "Features" },
   { href: "/#how-it-works", label: "How it Works" },
   { href: routeNames.pricing, label: "Pricing" },
 ];
@@ -88,6 +87,19 @@ export const PROCESS_STEPS = [
     title: "Get Results",
     description: "Receive detailed feedback with actionable suggestions",
   },
+];
+
+// Language Options
+export const LANGUAGE_OPTIONS = [
+  { value: "javascript", label: "JavaScript" },
+  { value: "typescript", label: "TypeScript" },
+  { value: "python", label: "Python" },
+  { value: "java", label: "Java" },
+  { value: "go", label: "Go" },
+  { value: "ruby", label: "Ruby" },
+  { value: "html", label: "HTML" },
+  { value: "css", label: "CSS" },
+  { value: "other", label: "Others" },
 ];
 
 // Supported File Types

@@ -15,13 +15,13 @@ export const useReviewStore = create(
 
     resetReview: () => set({ reviewResult: null, error: null }),
 
-    analyzeCode: async (code, tab) => {
+    analyzeCode: async (code, tab, language = "javascript") => {
       const { submitReview, homeSubmitReview } = get();
       const { user } = useAuthStore.getState();
 
       const submitReviewParams = {
         codeSnippet: code,
-        language: "js",
+        language,
         context: "",
         title: tab,
       };

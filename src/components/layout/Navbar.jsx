@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { NAV_LINKS, APP_CONFIG } from "@/constants";
+import { APP_CONFIG } from "@/constants";
 import FeatureIcon from "@/components/shared/FeatureIcon";
 import useLayoutStore from "@/store/layoutStore";
 import { useRouter } from "next/navigation";
@@ -107,16 +107,38 @@ export default function Navbar() {
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
-            {NAV_LINKS.map((link) => (
+            {user ? (
               <Link
-                key={link.href}
-                href={link.href}
-                onClick={(e) => handleHashClick(e, link.href)}
+                href="/#demo-section"
+                onClick={(e) => handleHashClick(e, "/#demo-section")}
                 className="text-gray-600 hover:text-gray-900 transition"
               >
-                {link.label}
+                Analyse Code
               </Link>
-            ))}
+            ) : (
+              <>
+                <Link
+                  href="/#features"
+                  onClick={(e) => handleHashClick(e, "/#features")}
+                  className="text-gray-600 hover:text-gray-900 transition"
+                >
+                  Features
+                </Link>
+                <Link
+                  href="/#how-it-works"
+                  onClick={(e) => handleHashClick(e, "/#how-it-works")}
+                  className="text-gray-600 hover:text-gray-900 transition"
+                >
+                  How it Works
+                </Link>
+              </>
+            )}
+            <Link
+              href={routeNames.pricing}
+              className="text-gray-600 hover:text-gray-900 transition"
+            >
+              Pricing
+            </Link>
             <UserMenu user={user} logout={logout} changeModal={changeModal} router={router} />
           </div>
 
@@ -130,16 +152,38 @@ export default function Navbar() {
 
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t">
-            {NAV_LINKS.map((link) => (
+            {user ? (
               <Link
-                key={link.href}
-                href={link.href}
-                onClick={(e) => handleHashClick(e, link.href)}
+                href="/#demo-section"
+                onClick={(e) => handleHashClick(e, "/#demo-section")}
                 className="block py-2 text-gray-600 hover:text-gray-900"
               >
-                {link.label}
+                Analyse Code
               </Link>
-            ))}
+            ) : (
+              <>
+                <Link
+                  href="/#features"
+                  onClick={(e) => handleHashClick(e, "/#features")}
+                  className="block py-2 text-gray-600 hover:text-gray-900"
+                >
+                  Features
+                </Link>
+                <Link
+                  href="/#how-it-works"
+                  onClick={(e) => handleHashClick(e, "/#how-it-works")}
+                  className="block py-2 text-gray-600 hover:text-gray-900"
+                >
+                  How it Works
+                </Link>
+              </>
+            )}
+            <Link
+              href={routeNames.pricing}
+              className="block py-2 text-gray-600 hover:text-gray-900"
+            >
+              Pricing
+            </Link>
             <UserMenu user={user} logout={logout} changeModal={changeModal} router={router} />
           </div>
         )}

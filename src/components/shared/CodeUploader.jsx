@@ -2,16 +2,23 @@
 
 import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { SUPPORTED_FILE_TYPES, DEMO_CODE_SAMPLES } from "@/constants";
+import {
+  SUPPORTED_FILE_TYPES,
+  DEMO_CODE_SAMPLES,
+  LANGUAGE_OPTIONS,
+} from "@/constants";
 import { useReviewStore } from "@/store/reviewStore";
 import FeatureIcon from "./FeatureIcon";
 import Button from "./Button";
 import Loading from "./Loading";
+import CustomSelect from "./CustomSelect";
 
 export default function CodeUploader({ isDemo = false, onAnalysis }) {
   const [code, setCode] = useState("");
   const [fileName, setFileName] = useState("");
   const [activeTab, setActiveTab] = useState("paste");
+  const [language, setLanguage] = useState("");
+  const [customLanguage, setCustomLanguage] = useState("");
 
   const { analyzeCode, isLoading } = useReviewStore();
 
@@ -41,6 +48,28 @@ export default function CodeUploader({ isDemo = false, onAnalysis }) {
 
   return (
     <div className="w-full">
+      {/* Language Selector */}
+      {activeTab === "paste" && (
+        <div className="flex items-center gap-2 mb-4">
+          <CustomSelect
+            value={language}
+            onChange={setLanguage}
+            options={LANGUAGE_OPTIONS}
+            placeholder="Select Language"
+            className="w-44 shrink-0"
+          />
+          {language === "other" && (
+            <input
+              type="text"
+              value={customLanguage}
+              onChange={(e) => setCustomLanguage(e.target.value)}
+              placeholder="Enter language name..."
+              className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          )}
+        </div>
+      )}
+
       {/* Tab Switcher */}
       <div className="flex gap-2 mb-4">
         <button
@@ -162,7 +191,11 @@ export default function CodeUploader({ isDemo = false, onAnalysis }) {
       <Button
         onClick={async () => {
           if (!code.trim()) return;
-          const result = await analyzeCode(code, fileName || activeTab);
+          const result = await analyzeCode(
+            code,
+            fileName || activeTab,
+            language === "other" ? `other-${customLanguage}` : language,
+          );
           if (result) onAnalysis?.(result);
         }}
         disabled={!code.trim() || isLoading}
