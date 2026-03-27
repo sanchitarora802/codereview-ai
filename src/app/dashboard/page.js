@@ -42,7 +42,9 @@ export default function DashboardPage() {
   });
 
   useEffect(() => {
-    if (user) fetchStats();
+    if (user) {
+      fetchStats();
+    }
   }, [user]);
 
   useEffect(() => {
