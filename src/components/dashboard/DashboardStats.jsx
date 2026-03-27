@@ -8,7 +8,7 @@ export default function DashboardStats() {
   const statCards = [
     {
       label: "Total Reviews",
-      value: overview?.totalReviews,
+      value: overview?.totalReviewsUsed,
       icon: "document",
       change: `${overview?.reviewsThisWeek} this week`,
       color: "blue",
