@@ -183,6 +183,12 @@ export const ISSUE_TYPES = {
   },
 };
 
+// Pricing Plans Duration
+export const PRICING_PLAN_DURATION = {
+  monthly: "monthly",
+  annually: "yearly",
+};
+
 // Pricing Plans
 export const PRICING_PLANS = [
   {
@@ -216,8 +222,8 @@ export const PRICING_PLANS = [
       "code-suggestions",
       "priority-support",
       "unlimited-reviews",
-      "team-collaboration",
-      "api-access",
+      // "team-collaboration",
+      // "api-access",
     ],
   },
 ];

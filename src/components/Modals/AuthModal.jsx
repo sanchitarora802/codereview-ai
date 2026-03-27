@@ -76,7 +76,7 @@ const AuthModal = ({ setShowModal }) => {
   useEffect(() => {
     setTimeout(() => {
       setError("");
-    }, [3000]);
+    }, [10000]);
   }, [error]);
 
   return (

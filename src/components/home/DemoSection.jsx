@@ -33,12 +33,12 @@ export default function DemoSection() {
             >
               {"Get Started 🚀"}
             </Button>
-            <Button
-              variant="outline"
-              size="large"
-              onClick={() => window.location.replace("/pricing")}
-            >
-              {
+            {!user?.paidPlan && (
+              <Button
+                variant="outline"
+                size="large"
+                onClick={() => window.location.replace("/pricing")}
+              >
                 <>
                   <svg
                     width="24px"
@@ -63,8 +63,8 @@ export default function DemoSection() {
                   </svg>
                   Get Premium
                 </>
-              }
-            </Button>
+              </Button>
+            )}
           </div>
         </>
       )}
