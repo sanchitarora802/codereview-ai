@@ -50,24 +50,28 @@ export default function CodeUploader({ isDemo = false, onAnalysis }) {
     <div className="w-full">
       {/* Language Selector */}
       {activeTab === "paste" && (
-        <div className="flex items-center gap-2 mb-4">
-          <CustomSelect
-            value={language}
-            onChange={setLanguage}
-            options={LANGUAGE_OPTIONS}
-            placeholder="Select Language"
-            className="w-44 shrink-0"
-          />
-          {language === "other" && (
-            <input
-              type="text"
-              value={customLanguage}
-              onChange={(e) => setCustomLanguage(e.target.value)}
-              placeholder="Enter language name..."
-              className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          )}
-        </div>
+        <>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="relative">
+              <CustomSelect
+                value={language}
+                onChange={setLanguage}
+                options={LANGUAGE_OPTIONS}
+                placeholder="Select Language **"
+                className="w-44 shrink-0"
+              />
+            </div>
+            {language === "other" && (
+              <input
+                type="text"
+                value={customLanguage}
+                onChange={(e) => setCustomLanguage(e.target.value)}
+                placeholder="Enter language name..."
+                className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            )}
+          </div>
+        </>
       )}
 
       {/* Tab Switcher */}
@@ -212,6 +216,9 @@ export default function CodeUploader({ isDemo = false, onAnalysis }) {
           "Analyze Code"
         )}
       </Button>
+      <div className="mt-3 text-sm text-gray-400">
+        ** Selecting language can improve the results
+      </div>
     </div>
   );
 }

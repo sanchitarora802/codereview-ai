@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Button from "@/components/shared/Button";
 import Card from "@/components/shared/Card";
 import FeatureIcon from "@/components/shared/FeatureIcon";
+import Accordion from "@/components/shared/Accordion";
 import { PRICING_PLANS, PRICING_FEATURES, FAQ_DATA } from "@/constants";
 import useLayoutStore from "@/store/layoutStore";
 import { useAuthStore } from "@/store/authStore";
@@ -37,10 +38,6 @@ export default function PricingPage() {
 
             {/* Billing Toggle */}
             <div className="flex flex-col items-center gap-3 mb-8">
-              {/* <p className="text-sm text-gray-500">
-                Pay annually and save{" "}
-                <span className="text-green-600 font-semibold">20%</span>
-              </p> */}
               <div className="inline-flex rounded-xl bg-gray-100 p-1">
                 <button
                   onClick={() => setBillingCycle("yearly")}
@@ -91,7 +88,11 @@ export default function PricingPage() {
                 isCurrentPlan={
                   mounted &&
                   !!user?.email &&
-                  user?.planId?.toLowerCase() === plan.id?.toLowerCase()
+                  user?.planId?.toLowerCase() === plan.id?.toLowerCase() &&
+                  (plan.id?.toLowerCase() ===
+                    process.env.NEXT_PUBLIC_STARTER_PLAN_NAME ||
+                    user?.planType?.toLowerCase() ===
+                      billingCycle?.toLowerCase())
                 }
               />
             ))}
@@ -177,16 +178,7 @@ export default function PricingPage() {
           </div>
 
           <div className="max-w-3xl mx-auto">
-            <div className="space-y-6">
-              {FAQ_DATA.map((faq, index) => (
-                <Card key={index} className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {faq.question}
-                  </h3>
-                  <p className="text-gray-600">{faq.answer}</p>
-                </Card>
-              ))}
-            </div>
+            <Accordion items={FAQ_DATA} />
           </div>
         </div>
       </section>
@@ -221,6 +213,16 @@ function PricingCard({ plan, billingCycle, isPopular, index, isCurrentPlan }) {
     billingCycle === "yearly" ? plan.yearlyPrice : plan.monthlyPrice;
   const originalPrice =
     billingCycle === "yearly" ? plan.monthlyPrice * 12 : null;
+
+  function getButtonName() {
+    let buttonName =
+      plan?.id === process.env.NEXT_PUBLIC_STARTER_PLAN_NAME
+        ? "Free"
+        : isCurrentPlan
+          ? "Current Plan"
+          : "Upgrade";
+    return buttonName;
+  }
 
   return (
     <Card
@@ -264,26 +266,27 @@ function PricingCard({ plan, billingCycle, isPopular, index, isCurrentPlan }) {
                 ${originalPrice}
               </span>
               <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                Save{" "}
-                {Math.round(((originalPrice - price) / originalPrice) * 100)}%
+                {`Save ${Math.round(((originalPrice - price) / originalPrice) * 100)}%`}
               </span>
             </>
           )}
         </div>
 
         <Button
-          disabled={plan?.id?.toLowerCase() === "starter"}
+          disabled={
+            getButtonName() === "Free" || getButtonName() === "Current Plan"
+          }
           variant={isPopular ? "primary" : "outline"}
           size="large"
           className="w-full"
           onClick={() => {
-            if (plan?.id?.toLowerCase() === "starter") return;
-            else {
-              console.log("pricing clicked");
+            let name = getButtonName();
+            if (name === "Upgrade") {
+              console.log("upgrade.");
             }
           }}
         >
-          {plan.cta}
+          {getButtonName()}
         </Button>
       </div>
 
