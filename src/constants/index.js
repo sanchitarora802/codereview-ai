@@ -267,7 +267,7 @@ export const PRICING_FEATURES = [
   },
   {
     id: "unlimited-reviews",
-    name: "Unlimited Reviews",
+    name: "Unlimited Reviews per Month",
     icon: "checkCircle",
   },
   {
@@ -299,11 +299,11 @@ export const FAQ_DATA = [
     answer:
       "We offer a 30-day money-back guarantee for all paid plans. If you're not satisfied, contact our support team for a full refund.",
   },
-  {
-    question: "Can I use CodeReviewAI for open source projects?",
-    answer:
-      "Yes! We offer special pricing for open source projects. Contact our sales team to learn about our open source program.",
-  },
+  // {
+  //   question: "Can I use CodeReviewAI for open source projects?",
+  //   answer:
+  //     "Yes! We offer special pricing for open source projects. Contact our sales team to learn about our open source program.",
+  // },
   {
     question: "What programming languages do you support?",
     answer:

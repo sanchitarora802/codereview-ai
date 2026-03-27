@@ -160,7 +160,7 @@ export default function DashboardPage() {
                 Monitor your code quality and review history
               </p>
             </div>
-            <div className="flex flex-col items-end gap-2">
+            <div className="flex flex-col items-end gap-1">
               <div className="flex items-center gap-1.5 bg-blue-50 border border-blue-200 rounded-full px-4 py-1.5 text-sm">
                 <span className="font-medium text-blue-500">Tokens:</span>
                 <Tooltip content="Tokens consumed">
@@ -175,6 +175,12 @@ export default function DashboardPage() {
                   </span>
                 </Tooltip>
               </div>
+              <span className="text-[13px] text-gray-600 mr-2 mt-1">
+                No of reviews consumed:{" "}
+                <span className="text-[13px] font-bold">
+                  {user?.totalReviewsUsed ?? 0}
+                </span>
+              </span>
             </div>
           </div>
         </div>
@@ -183,7 +189,10 @@ export default function DashboardPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-end gap-3 mb-6">
           {refreshDisabled ? (
-            <Tooltip content="Data update in progress. check after 10 min" place="left">
+            <Tooltip
+              content="Data update in progress. check after 10 min"
+              place="left"
+            >
               <Button variant="secondary" size="small" disabled>
                 <FeatureIcon icon="refresh" size={14} />
                 Refresh
@@ -309,7 +318,6 @@ export default function DashboardPage() {
           handleCodeAnalysis={handleCodeAnalysis}
         />
       )}
-
     </div>
   );
 }
