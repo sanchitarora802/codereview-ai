@@ -135,6 +135,7 @@ export default function DashboardPage() {
     setUploadResult(result);
 
     fetchStats();
+    fetchData();
 
     setTimeout(() => {
       setShowUploadModal(false);

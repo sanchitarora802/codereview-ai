@@ -7,33 +7,24 @@ import StatusBadge from "@/components/shared/StatusBadge";
 import FeatureIcon from "@/components/shared/FeatureIcon";
 import { ISSUE_TYPES } from "@/constants";
 import { getScoreColor } from "@/utils/helpers";
+import { useEffect } from "react";
+import { useReviewStore } from "@/store/reviewStore";
+import { useAuthStore } from "@/store/authStore";
 
 export default function ReviewPage() {
   const { id } = useParams();
   const router = useRouter();
+  const { isLoading, fetchSingleReview, reviewResult, error } =
+    useReviewStore();
+  const { user } = useAuthStore();
 
-  // TODO: replace with API data
-  const isLoading = false;
-  const review = {
-    file: "index.js",
-    language: "javascript",
-    score: 74,
-    issues: [
-      { type: "error", line: 12, message: "Undefined variable 'userData' used before declaration." },
-      { type: "warning", line: 34, message: "Avoid using == for comparison, use === instead." },
-      { type: "warning", line: 56, message: "Unused variable 'temp' detected." },
-    ],
-    suggestions: [
-      "Use const or let instead of var for better scoping.",
-      "Add error handling for async operations.",
-      "Consider breaking this function into smaller units.",
-    ],
-    executionTime: "2.3s",
-    linesAnalyzed: 128,
-    complexity: "Medium",
-    timeAgo: "2 hours ago",
-    codeSnippet: `function fetchUser(id) {\n  var userData = null;\n  fetch('/api/user/' + id)\n    .then(res => res.json())\n    .then(data => userData = data);\n  return userData;\n}`,
-  };
+  useEffect(() => {
+    if (id && user?.email) {
+      fetchSingleReview({
+        reviewId: id,
+      });
+    }
+  }, [user]);
 
   if (isLoading) {
     return (
@@ -43,11 +34,12 @@ export default function ReviewPage() {
     );
   }
 
-  if (!review) {
+  if (!reviewResult) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-500 mb-4">Review not found.</p>
+          <p className="text-gray-500 mb-4">{error}</p>
           <Button variant="secondary" onClick={() => router.push("/dashboard")}>
             Back to Dashboard
           </Button>
@@ -56,7 +48,17 @@ export default function ReviewPage() {
     );
   }
 
-  const { file, language, score, issues, suggestions, linesAnalyzed, complexity, timeAgo, codeSnippet } = review;
+  const {
+    title,
+    language,
+    linesAnalyzed,
+    createdAt,
+    codeSnippet,
+    analysis,
+    score,
+  } = reviewResult;
+
+  const { issues, suggestions, complexity } = analysis ?? {};
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -74,41 +76,90 @@ export default function ReviewPage() {
                 Back
               </Button>
               <div className="h-4 w-px bg-gray-200" />
-              <FeatureIcon icon="document" size={18} className="text-gray-400" />
-              <span className="font-semibold text-gray-800">{file}</span>
-              <StatusBadge status="neutral" size="small">{language}</StatusBadge>
+              <FeatureIcon
+                icon="document"
+                size={18}
+                className="text-gray-400"
+              />
+              <span className="font-semibold text-gray-800">{title}</span>
+              <StatusBadge status="neutral" size="small">
+                .{language} file
+              </StatusBadge>
             </div>
-            <span className="text-sm text-gray-400">{timeAgo}</span>
+            <span className="text-sm text-gray-400">
+              {createdAt ? new Date(createdAt).toLocaleDateString() : ""}
+            </span>
           </div>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-8 max-w-5xl space-y-6">
         {/* Overview */}
-        <Card border={false} className="border border-gray-100 p-0 overflow-hidden">
+        <Card
+          border={false}
+          className="border border-gray-100 p-0 overflow-hidden"
+        >
           <div className="bg-gradient-to-r from-blue-50 to-purple-50 px-6 py-5 flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-bold text-gray-900 mb-1">Analysis Overview</h2>
+              <h2 className="text-lg font-bold text-gray-900 mb-1">
+                Analysis Overview
+              </h2>
               <p className="text-sm text-gray-500">
-                {issues?.length} issue{issues?.length !== 1 ? "s" : ""} · {suggestions?.length} suggestion{suggestions?.length !== 1 ? "s" : ""} · {linesAnalyzed} lines analyzed
+                {issues?.length} issue{issues?.length !== 1 ? "s" : ""} ·{" "}
+                {suggestions?.length} suggestion
+                {suggestions?.length !== 1 ? "s" : ""} · {linesAnalyzed} lines
+                analyzed
               </p>
             </div>
             <div className="text-center">
-              <div className={`text-5xl font-bold ${getScoreColor(score)}`}>{score}</div>
-              <div className="text-xs text-gray-500 mt-1">/ 100</div>
+              <div
+                className={`text-5xl font-bold ${getScoreColor(analysis?.score)}`}
+              >
+                {score}
+              </div>
+              <div className="text-xs text-gray-500 mt-1">out of 100</div>
             </div>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y sm:divide-y-0 divide-gray-100">
             {[
-              { label: "Issues", value: issues?.length ?? 0, icon: "alert", color: "text-orange-500" },
-              { label: "Suggestions", value: suggestions?.length ?? 0, icon: "info", color: "text-blue-500" },
-              { label: "Lines", value: linesAnalyzed ?? 0, icon: "code", color: "text-purple-500" },
-              { label: "Complexity", value: complexity ?? "—", icon: "chart", color: "text-green-500" },
+              {
+                label: "Issues",
+                value: issues?.length ?? 0,
+                icon: "alert",
+                color: "text-orange-500",
+              },
+              {
+                label: "Suggestions",
+                value: suggestions?.length ?? 0,
+                icon: "info",
+                color: "text-blue-500",
+              },
+              {
+                label: "Lines",
+                value: linesAnalyzed ?? 0,
+                icon: "code",
+                color: "text-purple-500",
+              },
+              {
+                label: "Complexity",
+                value: complexity ?? "—",
+                icon: "chart",
+                color: "text-green-500",
+              },
             ].map((stat) => (
-              <div key={stat.label} className="flex items-center gap-3 px-6 py-4">
-                <FeatureIcon icon={stat.icon} size={18} className={stat.color} />
+              <div
+                key={stat.label}
+                className="flex items-center gap-3 px-6 py-4"
+              >
+                <FeatureIcon
+                  icon={stat.icon}
+                  size={18}
+                  className={stat.color}
+                />
                 <div>
-                  <div className="text-base font-bold text-gray-900">{stat.value}</div>
+                  <div className="text-base font-bold text-gray-900">
+                    {stat.value}
+                  </div>
                   <div className="text-xs text-gray-500">{stat.label}</div>
                 </div>
               </div>
@@ -128,13 +179,20 @@ export default function ReviewPage() {
             {issues?.length > 0 ? (
               <div className="space-y-3">
                 {issues.map((issue, idx) => (
-                  <div key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                  <div
+                    key={idx}
+                    className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg"
+                  >
                     <StatusBadge status={issue.type} size="small">
                       {ISSUE_TYPES[issue.type]?.label || issue.type}
                     </StatusBadge>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-700 leading-snug">{issue.message}</p>
-                      <span className="text-xs text-gray-400 mt-1 block">Line {issue.line}</span>
+                      <p className="text-sm text-gray-700 leading-snug">
+                        {issue.description}
+                      </p>
+                      <span className="text-xs text-gray-400 mt-1 block">
+                        Line {issue.line}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -154,9 +212,18 @@ export default function ReviewPage() {
             {suggestions?.length > 0 ? (
               <ul className="space-y-3">
                 {suggestions.map((s, idx) => (
-                  <li key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                    <FeatureIcon icon="greenTick" size={16} className="text-green-500 mt-0.5 flex-shrink-0" />
-                    <span className="text-sm text-gray-700">{s}</span>
+                  <li
+                    key={idx}
+                    className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg"
+                  >
+                    <FeatureIcon
+                      icon="greenTick"
+                      size={16}
+                      className="text-green-500 mt-0.5 flex-shrink-0"
+                    />
+                    <span className="text-sm text-gray-700">
+                      {s.description}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -168,7 +235,11 @@ export default function ReviewPage() {
 
         {/* Code Snippet */}
         {codeSnippet && (
-          <Card border={false} className="border border-gray-100" title="Code Snapshot">
+          <Card
+            border={false}
+            className="border border-gray-100"
+            title="Code Snapshot"
+          >
             <pre className="bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto text-sm leading-relaxed -mx-1">
               <code>{codeSnippet}</code>
             </pre>

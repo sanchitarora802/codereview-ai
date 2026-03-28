@@ -92,7 +92,7 @@ export default function ReviewsList() {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
                     className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getLanguageColor(
-                      review.language
+                      review.language,
                     )}`}
                   >
                     {review.language}
@@ -100,10 +100,12 @@ export default function ReviewsList() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-center">
                   <div className="flex items-center justify-center gap-2">
-                    <span className="flex-shrink-0">{getScoreIcon(review.score)}</span>
+                    <span className="flex-shrink-0">
+                      {getScoreIcon(review.score)}
+                    </span>
                     <span
                       className={`text-lg font-bold w-8 text-left tabular-nums ${getScoreColor(
-                        review.score
+                        review.score,
                       )}`}
                     >
                       {review.score}
@@ -144,9 +146,9 @@ export default function ReviewsList() {
                     >
                       View
                     </Link>
-                    <button className="text-gray-400 hover:text-gray-600">
+                    {/* <button className="text-gray-400 hover:text-gray-600">
                       <FeatureIcon icon="dots" size={20} />
-                    </button>
+                    </button> */}
                   </div>
                 </td>
               </tr>
