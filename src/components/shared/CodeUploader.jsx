@@ -16,7 +16,7 @@ import CustomSelect from "./CustomSelect";
 export default function CodeUploader({ isDemo = false, onAnalysis }) {
   const [code, setCode] = useState("");
   const [fileName, setFileName] = useState("");
-  const [activeTab, setActiveTab] = useState("paste");
+  const [activeTab, setActiveTab] = useState("copy-paste");
   const [language, setLanguage] = useState("");
   const [customLanguage, setCustomLanguage] = useState("");
 
@@ -49,7 +49,7 @@ export default function CodeUploader({ isDemo = false, onAnalysis }) {
   return (
     <div className="w-full">
       {/* Language Selector */}
-      {activeTab === "paste" && (
+      {activeTab === "copy-paste" && (
         <>
           <div className="flex items-center gap-2 mb-4">
             <div className="relative">
@@ -77,9 +77,9 @@ export default function CodeUploader({ isDemo = false, onAnalysis }) {
       {/* Tab Switcher */}
       <div className="flex gap-2 mb-4">
         <button
-          onClick={() => setActiveTab("paste")}
+          onClick={() => setActiveTab("copy-paste")}
           className={`px-4 py-2 rounded-lg font-medium transition ${
-            activeTab === "paste"
+            activeTab === "copy-paste"
               ? "bg-blue-600 text-white"
               : "bg-gray-100 text-gray-700 hover:bg-gray-200"
           }`}
@@ -111,7 +111,7 @@ export default function CodeUploader({ isDemo = false, onAnalysis }) {
       </div>
 
       {/* Tab Content */}
-      {activeTab === "paste" && (
+      {activeTab === "copy-paste" && (
         <div>
           <textarea
             value={code}

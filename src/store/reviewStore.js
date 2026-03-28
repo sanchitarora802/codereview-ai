@@ -108,13 +108,42 @@ export const useReviewStore = create(
 
         return enhancedResult;
       } catch (err) {
-        console.error("Review submission failed:", err);
         set({
           isLoading: false,
           error:
             err?.response?.data?.error ||
             err?.response?.data?.message ||
             "Analysis failed. Please try again.",
+          reviewResult: null,
+        });
+        throw err;
+      }
+    },
+
+    fetchSingleReview: async (singleReviewParams) => {
+      set({ isLoading: true, error: null, reviewResult: null });
+      try {
+        const { reviewId } = singleReviewParams;
+        const res = await axiosInstance.get(`/review-detail/${reviewId}`);
+
+        if (res.data.error) {
+          set({ isLoading: false, error: res.data.error, reviewResult: null });
+          return null;
+        }
+
+        if (res.data?.review) {
+          set({
+            isLoading: false,
+            error: null,
+            reviewResult: {
+              ...res.data?.review,
+            },
+          });
+        }
+      } catch (err) {
+        set({
+          isLoading: false,
+          error: err?.res?.data?.error || "Please try again.",
           reviewResult: null,
         });
         throw err;
