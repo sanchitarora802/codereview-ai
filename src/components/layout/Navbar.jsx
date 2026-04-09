@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 import { routeNames } from "@/utils/routes";
 
-function UserMenu({ user, logout, changeModal, router }) {
+function UserMenu({ user, logout, changeModal }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   if (user?.email) {
@@ -28,24 +28,10 @@ function UserMenu({ user, logout, changeModal, router }) {
         {isMenuOpen && (
           <ul className="absolute top-[45px] right-[-3px] w-40 overflow-hidden border border-2 rounded-lg bg-white shadow-md z-50">
             <li className="flex justify-center items-center text-gray-800 hover:bg-gray-100 transition py-[10px] px-[10px]">
-              <a
-                onClick={(e) => {
-                  e.preventDefault();
-                  router.push(routeNames.dashboard);
-                }}
-              >
-                Dashboard
-              </a>
+              <Link href={routeNames.dashboard}>Dashboard</Link>
             </li>
             <li className="flex justify-center items-center text-red-800 hover:bg-gray-100 transition py-[10px] px-[10px]">
-              <a
-                onClick={(e) => {
-                  e.preventDefault();
-                  logout();
-                }}
-              >
-                Logout
-              </a>
+              <button onClick={logout}>Logout</button>
             </li>
           </ul>
         )}
@@ -93,7 +79,6 @@ export default function Navbar() {
     }
   };
 
-
   return (
     <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
       <div className="container mx-auto px-4">
@@ -109,8 +94,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-8">
             {user ? (
               <Link
-                href="/#demo-section"
-                onClick={(e) => handleHashClick(e, "/#demo-section")}
+                href={routeNames.analyse}
                 className="text-gray-600 hover:text-gray-900 transition"
               >
                 Analyse Code
@@ -139,7 +123,7 @@ export default function Navbar() {
             >
               Pricing
             </Link>
-            <UserMenu user={user} logout={logout} changeModal={changeModal} router={router} />
+            <UserMenu user={user} logout={logout} changeModal={changeModal} />
           </div>
 
           <button
@@ -184,7 +168,7 @@ export default function Navbar() {
             >
               Pricing
             </Link>
-            <UserMenu user={user} logout={logout} changeModal={changeModal} router={router} />
+            <UserMenu user={user} logout={logout} changeModal={changeModal} />
           </div>
         )}
       </div>
