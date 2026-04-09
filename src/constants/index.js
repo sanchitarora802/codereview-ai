@@ -316,6 +316,44 @@ export const FAQ_DATA = [
   },
 ];
 
+// Analyse Page — How It Works Steps
+export const ANALYSE_HOW_IT_WORKS = [
+  {
+    step: "01",
+    icon: "code",
+    title: "Paste or upload your code",
+    description: "Copy-paste a snippet or upload a file directly. Supports JS, Python, Java, and more.",
+    color: "text-blue-500",
+    bg: "bg-blue-50",
+  },
+  {
+    step: "02",
+    icon: "settings",
+    title: "Select a language",
+    description: "Pick the language for more accurate results. Leave it blank for auto-detection.",
+    color: "text-purple-500",
+    bg: "bg-purple-50",
+  },
+  {
+    step: "03",
+    icon: "chart",
+    title: "Get instant analysis",
+    description: "Our AI scans your code and returns a score, issues, and actionable recommendations.",
+    color: "text-green-500",
+    bg: "bg-green-50",
+  },
+];
+
+// Analyse Page — What We Check
+export const ANALYSE_WHAT_WE_CHECK = [
+  { icon: "shield", label: "Security vulnerabilities", color: "text-red-500" },
+  { icon: "alert", label: "Bugs & logic errors", color: "text-orange-500" },
+  { icon: "lightning", label: "Performance bottlenecks", color: "text-yellow-500" },
+  { icon: "check", label: "Best practices", color: "text-green-500" },
+  { icon: "info", label: "Code maintainability", color: "text-blue-500" },
+  { icon: "trendingUp", label: "Complexity score", color: "text-purple-500" },
+];
+
 // App Config
 export const APP_CONFIG = {
   name: "CodeReviewAI",

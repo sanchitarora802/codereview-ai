@@ -91,13 +91,12 @@ export const useReviewStore = create(
 
         // Add execution time and lines analyzed if not provided by API
         const enhancedResult = {
-          ...res.data.data,
-          executionTime: res.data.data?.executionTime || "2.3s",
+          ...res.data.review,
+          executionTime: res.data.review?.executionTime || "2.3s",
           linesAnalyzed:
-            res.data.data?.linesAnalyzed ||
+            res.data.review?.linesAnalyzed ||
             submitReviewParams.codeSnippet?.split("\n").length ||
             0,
-          complexity: res.data.data?.complexity || "Medium",
         };
 
         set({

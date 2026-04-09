@@ -9,11 +9,15 @@ import { useReviewStore } from "@/store/reviewStore";
 import { useAuthStore } from "@/store/authStore";
 import Button from "../shared/Button";
 import useLayoutStore from "@/store/layoutStore";
+import { useRouter } from "next/navigation";
+import { routeNames } from "@/utils/routes";
 
 export default function DemoSection() {
   const { reviewResult, error } = useReviewStore();
   const { user } = useAuthStore();
   const { changeModal } = useLayoutStore();
+
+  const router = useRouter();
 
   return (
     <section id="demo-section" className="container mx-auto px-4 py-20">
@@ -27,7 +31,7 @@ export default function DemoSection() {
 
           <div className="flex justify-center gap-5">
             <Button
-              onClick={() => console.log("hello")}
+              onClick={() => router.push(routeNames.analyse)}
               variant="primary"
               size="large"
             >
@@ -37,7 +41,7 @@ export default function DemoSection() {
               <Button
                 variant="outline"
                 size="large"
-                onClick={() => window.location.replace("/pricing")}
+                onClick={() => router.push(routeNames.pricing)}
               >
                 <>
                   <svg
