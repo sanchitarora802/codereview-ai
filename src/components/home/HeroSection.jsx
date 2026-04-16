@@ -13,7 +13,7 @@ export default function HeroSection() {
           </span>
         )}
       </section> */}
-      <section className="container mx-auto px-4 pt-20 pb-16">
+      <section className="container mx-auto px-4 pt-16 pb-8">
         <div className="text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-medium mb-6">
             <span className="relative flex h-2 w-2">
@@ -35,10 +35,10 @@ export default function HeroSection() {
             {APP_CONFIG.description}
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-6 mt-12 text-sm text-gray-600">
-            {/* <TrustBadge text="No credit card required" /> */}
-            <TrustBadge text="14-day free trial" />
-            <TrustBadge text="Cancel anytime" />
+          <div className="flex flex-wrap items-center justify-center gap-6 mt-6 text-sm text-gray-600">
+            <TrustBadge text="No credit card required" />
+            <TrustBadge text="Free to try" />
+            <TrustBadge text="9+ languages supported" />
           </div>
         </div>
       </section>

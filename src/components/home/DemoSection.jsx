@@ -20,11 +20,11 @@ export default function DemoSection() {
   const router = useRouter();
 
   return (
-    <section id="demo-section" className="container mx-auto px-4 py-20">
+    <section id="demo-section" className="container mx-auto px-4 py-10">
       {user?.email && (
         <>
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold mb-2">
               Experience the power of AI-driven code analysis
             </h2>
           </div>

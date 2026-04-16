@@ -179,7 +179,7 @@ export default function DashboardPage() {
                 </Tooltip>
               </div>
               <span className="text-[13px] text-gray-600 mr-2 mt-1">
-                No of reviews consumed:{" "}
+                Reviews used:{" "}
                 <span className="text-[13px] font-bold">
                   {user?.totalReviewsUsed ?? 0}
                 </span>
