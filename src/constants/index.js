@@ -27,10 +27,38 @@ export const FOOTER_LINKS = {
 
 // Stats Data
 export const STATS_DATA = [
-  { value: "500K+", label: "Code Reviews" },
-  { value: "10K+", label: "Active Developers" },
-  { value: "99.9%", label: "Uptime" },
-  { value: "2.3s", label: "Avg Analysis Time" },
+  { value: "9+", label: "Languages Supported" },
+  { value: "~2s", label: "Avg Analysis Time" },
+  { value: "3-in-1", label: "Bugs, Security & Performance" },
+  { value: "100%", label: "AI Powered" },
+];
+
+// Testimonials
+export const TESTIMONIALS = [
+  {
+    name: "Alex Carter",
+    role: "Senior Frontend Engineer",
+    company: "Stripe",
+    avatar: "AC",
+    review:
+      "Caught a subtle XSS vulnerability in my React code that had slipped past two manual reviews. The analysis was instant and the suggestions were spot on.",
+  },
+  {
+    name: "Priya Nair",
+    role: "Full Stack Developer",
+    company: "Notion",
+    avatar: "PN",
+    review:
+      "I use this before every PR. The complexity score alone has helped me refactor code I thought was clean. A must-have for any serious developer.",
+  },
+  {
+    name: "James Liu",
+    role: "Backend Engineer",
+    company: "Vercel",
+    avatar: "JL",
+    review:
+      "The AI review is surprisingly deep — it doesn't just flag syntax issues but actually understands logic. It flagged an off-by-one error I'd been chasing for hours.",
+  },
 ];
 
 // Features Data
