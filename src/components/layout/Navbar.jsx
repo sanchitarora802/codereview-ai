@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import OutsideClickHandler from "react-outside-click-handler";
 import { APP_CONFIG } from "@/constants";
 import FeatureIcon from "@/components/shared/FeatureIcon";
 import useLayoutStore from "@/store/layoutStore";
@@ -14,28 +15,32 @@ function UserMenu({ user, logout, changeModal }) {
 
   if (user?.email) {
     return (
-      <div
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="relative cursor-pointer flex flex-row justify-center items-end gap-2 py-1 px-2 rounded-lg"
-      >
-        <FeatureIcon icon={"userprofile"} size={20} />
-        {!isMenuOpen ? (
-          <FeatureIcon icon={"chevronDown"} size={18} />
-        ) : (
-          <FeatureIcon icon={"chevronUp"} size={18} />
-        )}
+      <OutsideClickHandler onOutsideClick={() => setIsMenuOpen(false)}>
+        <div className="relative">
+          <div
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="cursor-pointer flex flex-row justify-center items-end gap-2 py-1 px-2 rounded-lg"
+          >
+            <FeatureIcon icon={"userprofile"} size={20} />
+            {!isMenuOpen ? (
+              <FeatureIcon icon={"chevronDown"} size={18} />
+            ) : (
+              <FeatureIcon icon={"chevronUp"} size={18} />
+            )}
+          </div>
 
-        {isMenuOpen && (
-          <ul className="absolute top-[45px] right-[-3px] w-40 overflow-hidden border border-2 rounded-lg bg-white shadow-md z-50">
-            <li className="flex justify-center items-center text-gray-800 hover:bg-gray-100 transition py-[10px] px-[10px]">
-              <Link href={routeNames.dashboard}>Dashboard</Link>
-            </li>
-            <li className="flex justify-center items-center text-red-800 hover:bg-gray-100 transition py-[10px] px-[10px]">
-              <button onClick={logout}>Logout</button>
-            </li>
-          </ul>
-        )}
-      </div>
+          {isMenuOpen && (
+            <ul className="absolute top-[45px] right-[-3px] w-40 overflow-hidden border border-2 rounded-lg bg-white shadow-md z-50">
+              <li>
+                <Link href={routeNames.dashboard} onClick={() => setIsMenuOpen(false)} className="flex justify-center items-center text-gray-800 hover:bg-gray-100 transition py-[10px] px-[10px] w-full">Dashboard</Link>
+              </li>
+              <li>
+                <button onClick={() => { setIsMenuOpen(false); logout(); }} className="flex justify-center items-center text-red-800 hover:bg-gray-100 transition py-[10px] px-[10px] w-full">Logout</button>
+              </li>
+            </ul>
+          )}
+        </div>
+      </OutsideClickHandler>
     );
   }
 
@@ -138,8 +143,8 @@ export default function Navbar() {
           <div className="md:hidden py-4 border-t">
             {user ? (
               <Link
-                href="/#demo-section"
-                onClick={(e) => handleHashClick(e, "/#demo-section")}
+                href={routeNames.analyse}
+                onClick={() => setMobileMenuOpen(false)}
                 className="block py-2 text-gray-600 hover:text-gray-900"
               >
                 Analyse Code
@@ -164,11 +169,35 @@ export default function Navbar() {
             )}
             <Link
               href={routeNames.pricing}
+              onClick={() => setMobileMenuOpen(false)}
               className="block py-2 text-gray-600 hover:text-gray-900"
             >
               Pricing
             </Link>
-            <UserMenu user={user} logout={logout} changeModal={changeModal} />
+            {user?.email ? (
+              <>
+                <Link
+                  href={routeNames.dashboard}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-gray-600 hover:text-gray-900"
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={() => { setMobileMenuOpen(false); logout(); }}
+                  className="block py-2 text-red-600 hover:text-red-800 w-full text-left"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => { setMobileMenuOpen(false); changeModal("login"); }}
+                className="mt-2 w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+              >
+                Get Started Free
+              </button>
+            )}
           </div>
         )}
       </div>
