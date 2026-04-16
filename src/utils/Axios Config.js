@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useAuthStore } from "@/store/authStore";
 
 const axiosInstance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api`,
@@ -22,8 +23,7 @@ const getResponseState = (res) => {
 
 const getErrorState = (error) => {
   if (error.response?.status === 401) {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    useAuthStore.getState().logout();
   }
   return Promise.reject(error);
 };
