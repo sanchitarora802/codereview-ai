@@ -5,6 +5,7 @@ import Button from "@/components/shared/Button";
 import Card from "@/components/shared/Card";
 import FeatureIcon from "@/components/shared/FeatureIcon";
 import Accordion from "@/components/shared/Accordion";
+import Modal from "@/components/shared/Modal";
 import { PRICING_PLANS, PRICING_FEATURES, FAQ_DATA } from "@/constants";
 import useLayoutStore from "@/store/layoutStore";
 import { useAuthStore } from "@/store/authStore";
@@ -209,6 +210,29 @@ export default function PricingPage() {
 }
 
 function PricingCard({ plan, billingCycle, isPopular, index, isCurrentPlan }) {
+  const [showComingSoon, setShowComingSoon] = useState(false);
+
+  function ComingSoonModal() {
+    return (
+      <Modal size="small" onClose={() => setShowComingSoon(false)}>
+        <div className="flex flex-col items-center text-center py-6 gap-4">
+          <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center">
+            <FeatureIcon icon="lightning" size={28} className="text-blue-600" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Coming Soon</h3>
+            <p className="text-gray-500 text-sm max-w-xs">
+              Payments are not yet enabled. We're working on it — check back soon!
+            </p>
+          </div>
+          <Button variant="primary" onClick={() => setShowComingSoon(false)}>
+            Got it
+          </Button>
+        </div>
+      </Modal>
+    );
+  }
+
   const price =
     billingCycle === "yearly" ? plan.yearlyPrice : plan.monthlyPrice;
   const originalPrice =
@@ -272,6 +296,7 @@ function PricingCard({ plan, billingCycle, isPopular, index, isCurrentPlan }) {
           )}
         </div>
 
+        {showComingSoon && <ComingSoonModal />}
         <Button
           disabled={
             getButtonName() === "Free" || getButtonName() === "Current Plan"
@@ -280,10 +305,7 @@ function PricingCard({ plan, billingCycle, isPopular, index, isCurrentPlan }) {
           size="large"
           className="w-full"
           onClick={() => {
-            let name = getButtonName();
-            if (name === "Upgrade") {
-              console.log("upgrade.");
-            }
+            if (getButtonName() === "Upgrade") setShowComingSoon(true);
           }}
         >
           {getButtonName()}
